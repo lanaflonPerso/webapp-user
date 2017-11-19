@@ -14,4 +14,11 @@ public class MainTest {
 		assertTrue( true );
 	}
 
+	/**
+	 * Un autre test rigoureux :-)
+	 */
+	@Test
+	public void testMain() {
+		assertTrue( true );
+	}
 }
