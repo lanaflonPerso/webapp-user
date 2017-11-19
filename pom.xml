@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project 
+	xmlns="http://maven.apache.org/POM/4.0.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  	<modelVersion>4.0.0</modelVersion>
+  	
+  	<!-- =============================================================== -->
+    <!-- Informations du projet -->
+    <!-- =============================================================== -->
+    <!-- ===== Informations Maven ===== -->
+  	<groupId>tr.exemple.demo</groupId>
+  	<artifactId>webapp-user</artifactId>
+  	<packaging>war</packaging>
+  	<version>0.0.1-SNAPSHOT</version>
+  	
+  	<!-- ===== Informations générales ===== -->
+  	<name>webapp-user Maven Webapp</name>
+  	<url>http://maven.apache.org</url>
+    <description>
+        Application Web Java sur la gestion des utilisateurs (authentification, inscription, connexion, etc...) 
+    </description>
+    
+     <organization>
+        <name>Mon Entreprise</name>
+        <url>https://exemple.org</url>
+    </organization>
+
+    <!-- =============================================================== -->
+    <!-- DistributionManagement -->
+    <!-- =============================================================== -->
+    <distributionManagement>
+        <site>
+            <id>site-projet</id>
+            <url>scp://localhost/tmp/</url>
+        </site>
+    </distributionManagement>    
+
+    <!-- =============================================================== -->
+    <!-- Propriétés -->
+    <!-- =============================================================== -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+                 	
+    <!-- =============================================================== -->
+    <!-- Gestion des dépendances -->
+    <!-- =============================================================== -->
+  	<dependencies>
+  		<!-- ===== Bibliothèques tierces ===== -->
+    	<dependency>
+      		<groupId>junit</groupId>
+      		<artifactId>junit</artifactId>
+      		<version>4.12</version>
+      		<scope>test</scope>
+    	</dependency>
+    	<dependency>
+		    <groupId>log4j</groupId>
+		    <artifactId>log4j</artifactId>
+		    <version>1.2.14</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.googlecode.catch-exception</groupId>
+		    <artifactId>catch-exception</artifactId>
+      		<version>1.2.0</version>
+      		<scope>test</scope>
+		</dependency>
+		<!-- DBUnit - Tests sur la base de données -->
+		<dependency>
+		    <groupId>org.dbunit</groupId>
+		    <artifactId>dbunit</artifactId>
+		    <version>2.5.4</version>
+		    <scope>test</scope>
+		</dependency>
+		<!-- HSQL - Driver jdbc -->
+		<dependency>
+		    <groupId>org.hsqldb</groupId>
+		    <artifactId>hsqldb</artifactId>
+		    <version>2.4.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+		<dependency>
+		    <groupId>mysql</groupId>
+		    <artifactId>mysql-connector-java</artifactId>
+		    <version>5.1.44</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+		<dependency>
+		    <groupId>commons-io</groupId>
+		    <artifactId>commons-io</artifactId>
+		    <version>1.4</version>
+		</dependency>	
+		<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+		<dependency>
+		    <groupId>com.h2database</groupId>
+		    <artifactId>h2</artifactId>
+		    <version>1.4.196</version>
+		    <scope>test</scope>
+		</dependency>
+		<!-- Utilitaires de Google -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>18.0</version>
+		</dependency>
+  	</dependencies>
+  	
+    <!-- =============================================================== -->
+    <!-- Build -->
+    <!-- =============================================================== -->
+    <build>
+		<finalName>webapp-user</finalName>    
+        <!-- ===== Gestion des plugins ===== -->
+        <pluginManagement>
+            <plugins>
+                <!-- Site -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.6</version>
+                    <configuration>
+                        <locales>fr</locales>
+                    </configuration>
+                </plugin>
+                <!-- Produire des métriques de couverture de code avec Cobertura -->
+                <plugin>
+	                <groupId>org.codehaus.mojo</groupId>
+	                <artifactId>cobertura-maven-plugin</artifactId>
+	                <version>2.5.1</version>
+	                <configuration>
+	                    <formats>
+	                        <format>xml</format>
+	                    </formats>
+	                </configuration>
+	                <executions>
+	                    <execution>
+	                        <phase>package</phase>
+	                        <goals>
+	                            <goal>cobertura</goal>
+	                        </goals>
+	                    </execution>
+	                </executions>
+	            </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>  	
+
+</project>
