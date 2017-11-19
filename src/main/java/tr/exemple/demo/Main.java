@@ -1,12 +1,14 @@
 package tr.exemple.demo;
 
+import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
 public class Main {
+	
+	final static Logger log = Logger.getLogger(Main.class);
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		System.out.println("Hello World");		
+		log.trace("Hello World");
 	}
 	
 	/**
@@ -17,8 +19,8 @@ public class Main {
 	 * @return int addition de a+b
 	 */
 	public int additionner(int a, int b) {
-//		PropertyConfigurator.configure("log4j.properties");
-//		log.trace("Addition : " + a + " + " + b);
+		PropertyConfigurator.configure("src/main/resources/log4j.properties");
+		log.trace("Addition : " + a + " + " + b);
 		return a + b;
 	}
 
