@@ -3,7 +3,6 @@ package tr.exemple.demo;
 import static org.junit.Assert.*;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 
 import tr.exemple.demo.Main;
 import org.junit.Test;

@@ -45,13 +45,7 @@ public class DAOFactory {
         String nomUtilisateur;
         String motDePasse;
         BoneCP connectionPool = null;
-
-        // gestion de notre fichier properties
-        log.trace("Ouverture du fichier " + FICHIER_PROPERTIES);
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        InputStream fichierProperties = classLoader.getResourceAsStream( FICHIER_PROPERTIES );
-        
-        
+        InputStream fichierProperties = getPropertiesFile(FICHIER_PROPERTIES);
 
         if ( fichierProperties == null ) {
         	log.error( "Le fichier properties " + FICHIER_PROPERTIES + " est introuvable." );
@@ -133,4 +127,18 @@ public class DAOFactory {
 //    public UtilisateurDao getUtilisateurDao() {
 //        return new UtilisateurDaoImpl( this );
 //    }
+    
+    /**
+     * Retourne InputStream qui prouve l'existence du fichier Properties dans le ClassLoader
+     * 
+     * @param String chemin du fichier Properties
+     * @return InputStream
+     */
+    protected static InputStream getPropertiesFile(String cheminFichierProperties) {
+        // gestion de notre fichier properties
+        log.trace("Ouverture du fichier " + cheminFichierProperties);
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        InputStream fichierProperties = classLoader.getResourceAsStream( cheminFichierProperties );   
+        return fichierProperties;
+    }
 }
