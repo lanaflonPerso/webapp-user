@@ -43,6 +43,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <application.name>Webapp-user</application.name>
     </properties>
                  	
     <!-- =============================================================== -->
@@ -74,6 +75,18 @@
 		    <version>2.5.4</version>
 		    <scope>test</scope>
 		</dependency>
+        <dependency>
+			<groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.jolbox/bonecp -->
+		<dependency>
+		    <groupId>com.jolbox</groupId>
+		    <artifactId>bonecp</artifactId>
+		    <version>0.8.0.RELEASE</version>
+		</dependency>        
 		<!-- HSQL - Driver jdbc -->
 		<dependency>
 		    <groupId>org.hsqldb</groupId>
@@ -105,6 +118,12 @@
 			<artifactId>guava</artifactId>
 			<version>18.0</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/jstl/jstl -->
+		<dependency>
+		    <groupId>jstl</groupId>
+		    <artifactId>jstl</artifactId>
+		    <version>1.2</version>
+		</dependency>		
   	</dependencies>
   	
     <!-- =============================================================== -->

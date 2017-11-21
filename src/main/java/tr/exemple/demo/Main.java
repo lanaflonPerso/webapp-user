@@ -19,7 +19,7 @@ public class Main {
 	 * @return int addition de a+b
 	 */
 	public int additionner(int a, int b) {
-		PropertyConfigurator.configure("src/main/resources/log4j.properties");
+		
 		log.trace("Addition : " + a + " + " + b);
 		return a + b;
 	}

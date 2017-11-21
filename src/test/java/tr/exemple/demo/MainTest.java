@@ -30,7 +30,7 @@ public class MainTest {
 	
 	@Test
 	public void testAdditionner() {
-		PropertyConfigurator.configure("src/main/resources/log4j.properties");
+//		PropertyConfigurator.configure("src/main/resources/log4j.properties");
 		Main calcul = new Main();
 		int a = 1;
 		int b = 2;
