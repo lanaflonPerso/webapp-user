@@ -135,7 +135,7 @@ public class DAOFactory {
     /**
      * Retourne InputStream qui prouve l'existence du fichier Properties dans le ClassLoader
      * 
-     * @param String chemin du fichier Properties
+     * @param cheminFichierProperties chemin du fichier Properties
      * @return InputStream
      */
     protected static InputStream getInputStream(String cheminFichierProperties) {
@@ -150,7 +150,7 @@ public class DAOFactory {
     /**
      * Méthode qui retourne un flux de données à partir d'un chemin de fichier cité en paramètre
      * 
-     * @param String cheminFichierProperties Chemin du fichier Properties
+     * @param cheminFichierProperties Chemin du fichier Properties
      * @return FileInputStream flux de données - exemple : java.io.FileInputStream@5f205aa
      */
     protected static FileInputStream getFileInputStream(String cheminFichierProperties) {
