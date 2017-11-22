@@ -157,10 +157,10 @@ public class DAOFactory {
     }
     
     /**
-     * Retourne les données du fichier properties cités en paramètre sous la forme d'une HashMap<String, String>
+     * Retourne les données du fichier properties cités en paramètre sous la forme d'une HashMap
      * 
      * @param fichierProperties Flux de données du fichier properties de type FileInputStream
-     * @return HashMap<String, String> Retourne les données du fichier properties sous la forme d'une HashMap
+     * @return HashMap Retourne les données du fichier properties sous la forme d'une HashMap
      */
     protected static HashMap<String, String> getPropertiesKeysValues(InputStream fichierProperties) {
     	// Déclaration de la map
