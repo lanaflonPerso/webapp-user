@@ -34,9 +34,8 @@ public class DAOFactoryTest {
 
 	@Test
 	public void testGetInputStream() {
-		DAOFactory dao = new DAOFactory(null);
 		
-		InputStream fichierProperties1 = dao.getInputStream("chemin bidon");
+		InputStream fichierProperties1 = DAOFactory.getInputStream("chemin bidon");
 		log.trace("@TEST getPropertiesFile() : " + fichierProperties1);
 		assertNull(fichierProperties1);
 		
@@ -76,9 +75,7 @@ public class DAOFactoryTest {
 //		FileInputStream fichierProperties2 = DAOFactory.getFileInputStream("src/main/resources/dao.properties");
 //		log.trace("DAOFactory.load(\"src/main/resources/dao.properties\") : " + fichierProperties2);
 		
-		DAOFactory dao = new DAOFactory(null);
-		
-		FileInputStream fichierProperties3 = dao.getFileInputStream("src/main/resources/log4j.properties");
+		FileInputStream fichierProperties3 = DAOFactory.getFileInputStream("src/main/resources/log4j.properties");
 		log.trace("DAOFactory.load(\"log4j.properties\") : " + fichierProperties3);
 		
 		
