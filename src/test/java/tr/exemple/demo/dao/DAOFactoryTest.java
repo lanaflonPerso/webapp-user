@@ -34,7 +34,9 @@ public class DAOFactoryTest {
 
 	@Test
 	public void testGetInputStream() {
-		InputStream fichierProperties1 = DAOFactory.getInputStream("chemin bidon");
+		DAOFactory dao = new DAOFactory(null);
+		
+		InputStream fichierProperties1 = dao.getInputStream("chemin bidon");
 		log.trace("@TEST getPropertiesFile() : " + fichierProperties1);
 		assertNull(fichierProperties1);
 		
@@ -43,28 +45,28 @@ public class DAOFactoryTest {
 //		assertNotNull(fichierProperties2);
 	}
 
-	@Test
-	public void testPropertiesLoad() {
-		Properties properties = new Properties();
-		
-		try {
-			FileInputStream input = new FileInputStream("src/main/resources/dao.properties");
-			log.trace("FileInputStream input : " + input);
-			try {
-				properties.load(input);
-				log.trace("properties : " + properties);
-				log.trace("properties.getProperty(\"url\") : " +  properties.getProperty("url"));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
+//	@Test
+//	public void testPropertiesLoad() {
+//		Properties properties = new Properties();
+//		
+//		try {
+//			FileInputStream input = new FileInputStream("src/main/resources/dao.properties");
+//			log.trace("FileInputStream input : " + input);
+//			try {
+//				properties.load(input);
+//				log.trace("properties : " + properties);
+//				log.trace("properties.getProperty(\"url\") : " +  properties.getProperty("url"));
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//	}
 	
 	@Test
 	public void testGetFileInputStream() {
@@ -74,7 +76,9 @@ public class DAOFactoryTest {
 //		FileInputStream fichierProperties2 = DAOFactory.getFileInputStream("src/main/resources/dao.properties");
 //		log.trace("DAOFactory.load(\"src/main/resources/dao.properties\") : " + fichierProperties2);
 		
-		FileInputStream fichierProperties3 = DAOFactory.getFileInputStream("src/main/resources/log4j.properties");
+		DAOFactory dao = new DAOFactory(null);
+		
+		FileInputStream fichierProperties3 = dao.getFileInputStream("src/main/resources/log4j.properties");
 		log.trace("DAOFactory.load(\"log4j.properties\") : " + fichierProperties3);
 		
 		

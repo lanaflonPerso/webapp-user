@@ -66,7 +66,7 @@ public class DAOFactory {
             driver = properties.getProperty( PROPERTY_DRIVER );
             nomUtilisateur = properties.getProperty( PROPERTY_NOM_UTILISATEUR );
             motDePasse = properties.getProperty( PROPERTY_MOT_DE_PASSE );
-            log.trace("Tous les champs ont été récupérés.");
+            log.info("Tous les champs ont été récupérés.");
         } catch ( FileNotFoundException e ) {
         	log.error( "Le fichier properties " + FICHIER_PROPERTIES + " est introuvable." );
             throw new DAOConfigurationException( "Le fichier properties " + FICHIER_PROPERTIES + " est introuvable.",
@@ -158,7 +158,7 @@ public class DAOFactory {
 		try {
 			log.trace("Tentative de récupération du fichier : " + cheminFichierProperties);
 			fichierProperties = new FileInputStream(cheminFichierProperties);
-			log.trace("SUCCESS : le fichier " + cheminFichierProperties + " a bien été trouvé.");
+			log.info("SUCCESS : le fichier " + cheminFichierProperties + " a bien été trouvé.");
 		} catch (FileNotFoundException e) {
         	log.error( "Le fichier properties " + cheminFichierProperties + " est introuvable." );
             throw new DAOConfigurationException( "Le fichier properties " + cheminFichierProperties + " est introuvable.", e );
