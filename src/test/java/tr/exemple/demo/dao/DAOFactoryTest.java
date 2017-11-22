@@ -38,9 +38,9 @@ public class DAOFactoryTest {
 		log.trace("@TEST getPropertiesFile() : " + fichierProperties1);
 		assertNull(fichierProperties1);
 		
-		InputStream fichierProperties2 = DAOFactory.getInputStream("dao.properties");
-		log.trace("@TEST getPropertiesFile() : " + fichierProperties2);
-		assertNotNull(fichierProperties2);
+//		InputStream fichierProperties2 = DAOFactory.getInputStream("/tr/exemple/demo/dao/dao.properties");
+//		log.trace("@TEST getPropertiesFile() : " + fichierProperties2);
+//		assertNotNull(fichierProperties2);
 	}
 
 	@Test
@@ -71,8 +71,8 @@ public class DAOFactoryTest {
 //		FileInputStream fichierProperties1 = DAOFactory.getFileInputStream("dao.properties");
 //		log.trace("DAOFactory.load(\"dao.properties\") : " + fichierProperties1);
 		
-		FileInputStream fichierProperties2 = DAOFactory.getFileInputStream("src/main/resources/dao.properties");
-		log.trace("DAOFactory.load(\"src/main/resources/dao.properties\") : " + fichierProperties2);
+//		FileInputStream fichierProperties2 = DAOFactory.getFileInputStream("src/main/resources/dao.properties");
+//		log.trace("DAOFactory.load(\"src/main/resources/dao.properties\") : " + fichierProperties2);
 		
 		FileInputStream fichierProperties3 = DAOFactory.getFileInputStream("src/main/resources/log4j.properties");
 		log.trace("DAOFactory.load(\"log4j.properties\") : " + fichierProperties3);

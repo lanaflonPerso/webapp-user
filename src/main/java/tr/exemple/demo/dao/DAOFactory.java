@@ -18,8 +18,8 @@ import tr.exemple.demo.Main;
 
 public class DAOFactory {
 
-//    private static final String FICHIER_PROPERTIES       = "/tr/exemple/demo/dao/dao.properties";
-    private static final String FICHIER_PROPERTIES       = "dao.properties";
+    private static final String FICHIER_PROPERTIES       = "/tr/exemple/demo/dao/dao.properties";
+//    private static final String FICHIER_PROPERTIES       = "dao.properties";
     private static final String PROPERTY_URL             = "url";
     private static final String PROPERTY_DRIVER          = "driver";
     private static final String PROPERTY_NOM_UTILISATEUR = "nomutilisateur";
@@ -141,9 +141,9 @@ public class DAOFactory {
     protected static InputStream getInputStream(String cheminFichierProperties) {
         // gestion de notre fichier properties
         log.trace("Ouverture du fichier " + cheminFichierProperties);
-//        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-//        InputStream fichierProperties = classLoader.getResourceAsStream( cheminFichierProperties );   
-        InputStream fichierProperties = DAOFactory.class.getResourceAsStream(cheminFichierProperties);
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        InputStream fichierProperties = classLoader.getResourceAsStream( cheminFichierProperties );   
+//        InputStream fichierProperties = DAOFactory.class.getResourceAsStream(cheminFichierProperties);
         return fichierProperties;
     }
     
