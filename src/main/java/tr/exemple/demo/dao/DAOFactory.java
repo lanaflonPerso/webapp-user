@@ -1,5 +1,6 @@
 package tr.exemple.demo.dao;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,7 +18,8 @@ import tr.exemple.demo.Main;
 
 public class DAOFactory {
 
-    private static final String FICHIER_PROPERTIES       = "/tr/exemple/demo/dao/dao.properties";
+//    private static final String FICHIER_PROPERTIES       = "/tr/exemple/demo/dao/dao.properties";
+    private static final String FICHIER_PROPERTIES       = "dao.properties";
     private static final String PROPERTY_URL             = "url";
     private static final String PROPERTY_DRIVER          = "driver";
     private static final String PROPERTY_NOM_UTILISATEUR = "nomutilisateur";
@@ -45,13 +47,15 @@ public class DAOFactory {
         String nomUtilisateur;
         String motDePasse;
         BoneCP connectionPool = null;
-        InputStream fichierProperties = getPropertiesFile(FICHIER_PROPERTIES);
+        InputStream fichierProperties = getInputStream(FICHIER_PROPERTIES);
+//        FileInputStream fichierProperties = load("src/main/resources/dao.properties");
+
 
         if ( fichierProperties == null ) {
         	log.error( "Le fichier properties " + FICHIER_PROPERTIES + " est introuvable." );
             throw new DAOConfigurationException( "Le fichier properties " + FICHIER_PROPERTIES + " est introuvable." );
         } else {
-        	log.trace("Le fichier " + FICHIER_PROPERTIES + " a été correctement chargé.");
+        	log.info("Le fichier " + FICHIER_PROPERTIES + " a été correctement chargé.");
         }        
         
         try {
@@ -134,11 +138,31 @@ public class DAOFactory {
      * @param String chemin du fichier Properties
      * @return InputStream
      */
-    protected static InputStream getPropertiesFile(String cheminFichierProperties) {
+    protected static InputStream getInputStream(String cheminFichierProperties) {
         // gestion de notre fichier properties
         log.trace("Ouverture du fichier " + cheminFichierProperties);
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        InputStream fichierProperties = classLoader.getResourceAsStream( cheminFichierProperties );   
+//        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+//        InputStream fichierProperties = classLoader.getResourceAsStream( cheminFichierProperties );   
+        InputStream fichierProperties = DAOFactory.class.getResourceAsStream(cheminFichierProperties);
         return fichierProperties;
+    }
+    
+    /**
+     * Méthode qui retourne un flux de données à partir d'un chemin de fichier cité en paramètre
+     * 
+     * @param String cheminFichierProperties Chemin du fichier Properties
+     * @return FileInputStream flux de données - exemple : java.io.FileInputStream@5f205aa
+     */
+    protected static FileInputStream getFileInputStream(String cheminFichierProperties) {
+    	FileInputStream fichierProperties = null;
+		try {
+			log.trace("Tentative de récupération du fichier : " + cheminFichierProperties);
+			fichierProperties = new FileInputStream(cheminFichierProperties);
+			log.trace("SUCCESS : le fichier " + cheminFichierProperties + " a bien été trouvé.");
+		} catch (FileNotFoundException e) {
+        	log.error( "Le fichier properties " + cheminFichierProperties + " est introuvable." );
+            throw new DAOConfigurationException( "Le fichier properties " + cheminFichierProperties + " est introuvable.", e );
+		}
+    	return fichierProperties;
     }
 }
