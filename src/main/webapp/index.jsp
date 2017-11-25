@@ -18,6 +18,14 @@
 
 <c:import url="_include/header.jsp" />
 
+<div class="container">
+    <ul>
+        <li>Application : ${application.name}</li>
+        <li>Version : ${project.version}</li>
+        <li>Date du build : ${maven.build.timestamp}</li>
+        <li>Java version : ${java.version}</li>
+    </ul>
+</div>
 
 <c:import url="_include/footer.jsp" />
 

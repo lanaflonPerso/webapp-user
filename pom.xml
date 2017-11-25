@@ -130,10 +130,37 @@
     <!-- Build -->
     <!-- =============================================================== -->
     <build>
-		<finalName>webapp-user</finalName>    
+		<finalName>webapp-user</finalName>
+		<!-- Filtrer les ressources pour les afficher dynamiquement dans une jsp 
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		-->    
         <!-- ===== Gestion des plugins ===== -->
         <pluginManagement>
             <plugins>
+            	<!-- Ajouter certaines informations du projet dans les jsp -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>3.1.0</version>
+                    <configuration>
+                    	<webResources>
+                   			<resource>
+                   				<filtering>true</filtering>
+                   				<directory>src/main/webapp</directory>
+                   				<includes>
+                   					<include>index.jsp</include>
+                   					<include>_include/header.jsp</include>
+                   					<include>_include/footer.jsp</include>
+                   				</includes>
+                   			</resource>
+                    	</webResources>
+                    </configuration>
+                </plugin>
                 <!-- Site -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -147,7 +174,7 @@
                 <plugin>
 	                <groupId>org.codehaus.mojo</groupId>
 	                <artifactId>cobertura-maven-plugin</artifactId>
-	                <version>2.5.1</version>
+	                <version>2.7</version>
 	                <configuration>
 	                    <formats>
 	                        <format>xml</format>
