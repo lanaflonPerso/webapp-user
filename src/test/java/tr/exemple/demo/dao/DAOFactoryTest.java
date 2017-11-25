@@ -40,9 +40,9 @@ public class DAOFactoryTest {
 		log.trace("@TEST getPropertiesFile() : " + fichierProperties1);
 		assertNull(fichierProperties1);
 		
-//		InputStream fichierProperties2 = DAOFactory.getInputStream("/tr/exemple/demo/dao/dao.properties");
-//		log.trace("@TEST getPropertiesFile() : " + fichierProperties2);
-//		assertNotNull(fichierProperties2);
+		InputStream fichierProperties2 = DAOFactory.getInputStream("/tr/exemple/demo/dao/dao.properties");
+		log.trace("@TEST getPropertiesFile() : " + fichierProperties2);
+		assertNotNull(fichierProperties2);
 	}
 
 //	@Test
