@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 
 import com.jolbox.bonecp.BoneCP;
 import com.jolbox.bonecp.BoneCPConfig;
@@ -34,9 +33,11 @@ public class DAOFactory {
         this.connectionPool = connectionPool;
     }
 
-    /*
+    /**
      * Méthode chargée de récupérer les informations de connexion à la base de
      * données, charger le driver JDBC et retourner une instance de la Factory
+     * @return
+     * @throws DAOConfigurationException
      */
     public static DAOFactory getInstance() throws DAOConfigurationException {
     	    	
