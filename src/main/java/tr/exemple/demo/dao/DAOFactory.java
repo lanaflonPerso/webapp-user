@@ -60,13 +60,16 @@ public class DAOFactory {
         }
 
         // Connexion au driver jdbc
-        try {
-            Class.forName(hmap.get(PROPERTY_DRIVER));
-            log.trace("Connexion au driver jdbc : \"" + hmap.get(PROPERTY_DRIVER) + "\" avec succès");
-        } catch (ClassNotFoundException e) {
-            log.error("Le driver est introuvable dans le classpath.");
-            throw new DAOConfigurationException("Le driver est introuvable dans le classpath.", e);
-        }
+        connexionDriverJdbc(hmap);
+
+        // Connexion au driver jdbc
+        // try {
+        // Class.forName(hmap.get(PROPERTY_DRIVER));
+        // log.trace("Connexion au driver jdbc : \"" + hmap.get(PROPERTY_DRIVER) + "\" avec succès");
+        // } catch (ClassNotFoundException e) {
+        // log.error("Le driver est introuvable dans le classpath.");
+        // throw new DAOConfigurationException("Le driver est introuvable dans le classpath.", e);
+        // }
 
         try {
             /*
@@ -183,5 +186,21 @@ public class DAOFactory {
             throw new DAOConfigurationException("Impossible de charger le fichier properties " + FICHIER_PROPERTIES, e);
         }
         return hmap;
+    }
+
+    /**
+     * Connexion au driver jdbc
+     * 
+     * @param hmap
+     */
+    protected static void connexionDriverJdbc(HashMap<String, String> hmap) {
+        // Connexion au driver jdbc
+        try {
+            Class.forName(hmap.get(PROPERTY_DRIVER));
+            log.trace("Connexion au driver jdbc : \"" + hmap.get(PROPERTY_DRIVER) + "\" avec succès");
+        } catch (ClassNotFoundException e) {
+            log.error("Le driver est introuvable dans le classpath.");
+            throw new DAOConfigurationException("Le driver est introuvable dans le classpath.", e);
+        }
     }
 }
