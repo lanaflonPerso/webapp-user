@@ -100,8 +100,7 @@ public class DAOFactoryTest {
     @Test
     public void testGetPropertiesKeysValues() {
         HashMap<String, String> hmap = new HashMap<String, String>();
-        FileInputStream fichierProperties = DAOFactory
-                .getFileInputStream("src/main/java/tr/exemple/demo/dao/dao.properties");
+        FileInputStream fichierProperties = DAOFactory.getFileInputStream("src/main/resources/dao.properties");
         hmap = DAOFactory.getPropertiesKeysValues(fichierProperties);
         log.trace("HashMap<String, String> hmap : " + hmap);
         assertNotNull(hmap);
