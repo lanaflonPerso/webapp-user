@@ -1,0 +1,85 @@
+@charset "UTF-8";
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    padding-top: 80px;
+    margin-bottom: 30px;
+}
+
+.modal-header, .close {
+	background-color: #333;
+	color: #fff !important;
+	text-align: center;
+	font-size: 30px;
+}
+.modal-header h4 {
+	letter-spacing: 0px;
+	color: #fff !important;
+	text-align: center;
+	font-size: 20px;
+}
+
+.modal-header, .modal-body {
+	padding: 40px 40px;
+}
+
+.my-modal-header .close {
+	font-size: 40px;
+}
+
+#modalLogin .collapse {
+	padding:8px 0 8px 0;
+}
+
+#modalLogin .resultat-ajax, #modalLogin .connexion-error{
+	display:none;
+}
+
+#modalLogin .connexion-text {
+	font-size: 12px;
+}
+
+#modalLogin .checkbox {
+	font-size: 13px;
+}
+
+#modalLogin .connexion-option {
+	padding-left: 0px !important;
+	padding-right: 0px !important;
+}
+
+#modalLogin .connexion-submit {
+	padding-top:8px;
+}
+
+#modalLogin .connexion-submit .btn{
+    width:100%; 
+    text-align:center;
+}
+
+.open .dropdown-toggle {
+	color: #fff;
+	background-color: #555 !important;
+}
+
+.dropdown-menu li a {
+	color: #000 !important;
+}
+
+.dropdown-menu li a:hover {
+	background-color: red !important;
+}
+
+.footer {
+    position: absolute;
+    padding-top: 5px;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 30px;
+    background-color: #f5f5f5;
+}

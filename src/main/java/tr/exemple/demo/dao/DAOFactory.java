@@ -45,11 +45,6 @@ public class DAOFactory {
         // Hashmap du couple (clé, valeur) du fichier properties
         HashMap<String, String> hmap = new HashMap<String, String>();
 
-        // Properties properties = new Properties();
-        // String url = null;
-        // String driver = null;
-        // String nomUtilisateur = null;
-        // String motDePasse = null;
         BoneCP connectionPool = null;
         InputStream fichierProperties = getInputStream(FICHIER_PROPERTIES);
         // FileInputStream fichierProperties = getFileInputStream(FICHIER_PROPERTIES);
@@ -101,7 +96,7 @@ public class DAOFactory {
          * Enregistrement du pool créé dans une variable d'instance via un appel au constructeur de DAOFactory
          */
         DAOFactory instance = new DAOFactory(connectionPool);
-        log.info("Instanciation du DAOFactory");
+        log.info("Instanciation du DAOFactory : " + instance);
         return instance;
     }
 
