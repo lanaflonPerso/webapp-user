@@ -16,8 +16,8 @@ import com.jolbox.bonecp.BoneCPConfig;
 
 public class DAOFactory {
 
-    private static final String FICHIER_PROPERTIES = "/tr/exemple/demo/dao/dao.properties";
-    // private static final String FICHIER_PROPERTIES = "dao.properties";
+    // private static final String FICHIER_PROPERTIES = "/tr/exemple/demo/dao/dao.properties";
+    private static final String FICHIER_PROPERTIES = "dao.properties";
     private static final String PROPERTY_URL = "url";
     private static final String PROPERTY_DRIVER = "driver";
     private static final String PROPERTY_NOM_UTILISATEUR = "nomutilisateur";
@@ -52,7 +52,7 @@ public class DAOFactory {
         // String motDePasse = null;
         BoneCP connectionPool = null;
         InputStream fichierProperties = getInputStream(FICHIER_PROPERTIES);
-        // FileInputStream fichierProperties = load("src/main/resources/dao.properties");
+        // FileInputStream fichierProperties = getFileInputStream(FICHIER_PROPERTIES);
 
         if (fichierProperties == null) {
             log.error("Le fichier properties " + FICHIER_PROPERTIES + " est introuvable.");
@@ -118,7 +118,7 @@ public class DAOFactory {
     // }
 
     /**
-     * Retourne InputStream qui prouve l'existence du fichier Properties dans le ClassLoader
+     * Retourne InputStream qui prouve l'existence du fichier Properties dans le ClassLoader ici src/main/resources
      * 
      * @param cheminFichierProperties
      *            chemin du fichier Properties

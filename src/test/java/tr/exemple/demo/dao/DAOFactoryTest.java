@@ -74,6 +74,7 @@ public class DAOFactoryTest {
 
         FileInputStream fichierProperties3 = DAOFactory.getFileInputStream("src/main/resources/log4j.properties");
         log.trace("DAOFactory.load(\"log4j.properties\") : " + fichierProperties3);
+        assertNotNull(fichierProperties3);
 
     }
 
