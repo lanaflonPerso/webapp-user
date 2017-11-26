@@ -14,8 +14,6 @@ import org.apache.log4j.Logger;
 import com.jolbox.bonecp.BoneCP;
 import com.jolbox.bonecp.BoneCPConfig;
 
-import tr.exemple.demo.Main;
-
 public class DAOFactory {
 
     private static final String FICHIER_PROPERTIES = "/tr/exemple/demo/dao/dao.properties";
@@ -80,8 +78,8 @@ public class DAOFactory {
              * Création d'une configuration de pool de connexions via l'objet BoneCPConfig et les différents setters
              * associés.
              */
-            log.trace(
-                    "Création d'une configuration de pool de connexions via l'objet BoneCPConfig et les différents setters associés.");
+            log.trace("Création d'une configuration de pool de connexions via l'objet BoneCPConfig "
+                    + "et les différents setters associés.");
             BoneCPConfig config = new BoneCPConfig();
             /* Mise en place de l'URL, du nom et du mot de passe */
             config.setJdbcUrl(hmap.get(PROPERTY_URL));
@@ -97,14 +95,13 @@ public class DAOFactory {
             connectionPool = new BoneCP(config);
         } catch (SQLException e) {
             log.error("Erreur de configuration du pool de connexions.");
-            e.printStackTrace();
             throw new DAOConfigurationException("Erreur de configuration du pool de connexions.", e);
         }
         /*
          * Enregistrement du pool créé dans une variable d'instance via un appel au constructeur de DAOFactory
          */
         DAOFactory instance = new DAOFactory(connectionPool);
-        System.out.println("Instanciation du DAOFactory");
+        log.info("Instanciation du DAOFactory");
         return instance;
     }
 
