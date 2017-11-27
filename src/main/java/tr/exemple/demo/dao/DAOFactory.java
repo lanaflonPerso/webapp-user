@@ -35,7 +35,7 @@ public class DAOFactory {
      * Méthode chargée de récupérer les informations de connexion à la base de données, charger le driver JDBC et
      * retourner une instance de la Factory
      * 
-     * @return
+     * @return une instance de la Factory
      * @throws DAOConfigurationException
      */
     public static DAOFactory getInstance() throws DAOConfigurationException {
@@ -45,7 +45,9 @@ public class DAOFactory {
         // Hashmap du couple (clé, valeur) du fichier properties
         HashMap<String, String> hmap = new HashMap<String, String>();
 
+        // Connexion Pool de BoneCP initialisée à null
         BoneCP connectionPool = null;
+
         InputStream fichierProperties = getInputStream(FICHIER_PROPERTIES);
         // FileInputStream fichierProperties = getFileInputStream(FICHIER_PROPERTIES);
 
@@ -62,39 +64,12 @@ public class DAOFactory {
         // Connexion au driver jdbc
         connexionDriverJdbc(hmap);
 
-        // Connexion au driver jdbc
-        // try {
-        // Class.forName(hmap.get(PROPERTY_DRIVER));
-        // log.trace("Connexion au driver jdbc : \"" + hmap.get(PROPERTY_DRIVER) + "\" avec succès");
-        // } catch (ClassNotFoundException e) {
-        // log.error("Le driver est introuvable dans le classpath.");
-        // throw new DAOConfigurationException("Le driver est introuvable dans le classpath.", e);
-        // }
+        /*
+         * Création d'une configuration de pool de connexions via l'objet BoneCPConfig et les différents setters
+         * associés.
+         */
+        connectionPool = connexionBoneCP(hmap);
 
-        try {
-            /*
-             * Création d'une configuration de pool de connexions via l'objet BoneCPConfig et les différents setters
-             * associés.
-             */
-            log.trace("Création d'une configuration de pool de connexions via l'objet BoneCPConfig "
-                    + "et les différents setters associés.");
-            BoneCPConfig config = new BoneCPConfig();
-            /* Mise en place de l'URL, du nom et du mot de passe */
-            config.setJdbcUrl(hmap.get(PROPERTY_URL));
-            config.setUsername(hmap.get(PROPERTY_NOM_UTILISATEUR));
-            config.setPassword(hmap.get(PROPERTY_MOT_DE_PASSE));
-            /* Paramétrage de la taille du pool */
-            config.setMinConnectionsPerPartition(5);
-            config.setMaxConnectionsPerPartition(10);
-            config.setPartitionCount(2);
-            /*
-             * Création du pool à partir de la configuration, via l'objet BoneCP
-             */
-            connectionPool = new BoneCP(config);
-        } catch (SQLException e) {
-            log.error("Erreur de configuration du pool de connexions.");
-            throw new DAOConfigurationException("Erreur de configuration du pool de connexions.", e);
-        }
         /*
          * Enregistrement du pool créé dans une variable d'instance via un appel au constructeur de DAOFactory
          */
@@ -103,7 +78,12 @@ public class DAOFactory {
         return instance;
     }
 
-    /* Méthode chargée de fournir une connexion à la base de données */
+    /**
+     * Méthode chargée de fournir une connexion à la base de données
+     * 
+     * @return BoneCP connectionPool
+     * @throws SQLException
+     */
     /* package */Connection getConnection() throws SQLException {
         return connectionPool.getConnection();
     }
@@ -201,6 +181,36 @@ public class DAOFactory {
         } catch (ClassNotFoundException e) {
             log.error("Le driver est introuvable dans le classpath.");
             throw new DAOConfigurationException("Le driver est introuvable dans le classpath.", e);
+        }
+    }
+
+    /**
+     * Création d'une configuration de pool de connexions via l'objet BoneCPConfig et les différents setters associés.
+     * 
+     * @param hmap
+     *            Contient les données du fichier properties
+     * @return BoneCP Création du pool à partir de la configuration, via l'objet BoneCP
+     */
+    protected static BoneCP connexionBoneCP(HashMap<String, String> hmap) {
+        try {
+            log.trace("Création d'une configuration de pool de connexions via l'objet BoneCPConfig "
+                    + "et les différents setters associés.");
+            BoneCPConfig config = new BoneCPConfig();
+            /* Mise en place de l'URL, du nom et du mot de passe */
+            config.setJdbcUrl(hmap.get(PROPERTY_URL));
+            config.setUsername(hmap.get(PROPERTY_NOM_UTILISATEUR));
+            config.setPassword(hmap.get(PROPERTY_MOT_DE_PASSE));
+            /* Paramétrage de la taille du pool */
+            config.setMinConnectionsPerPartition(5);
+            config.setMaxConnectionsPerPartition(10);
+            config.setPartitionCount(2);
+            /*
+             * Création du pool à partir de la configuration, via l'objet BoneCP
+             */
+            return new BoneCP(config);
+        } catch (SQLException e) {
+            log.error("Erreur de configuration du pool de connexions.");
+            throw new DAOConfigurationException("Erreur de configuration du pool de connexions.", e);
         }
     }
 }

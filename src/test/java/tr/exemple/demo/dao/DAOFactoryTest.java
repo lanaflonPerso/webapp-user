@@ -10,6 +10,8 @@ import java.util.HashMap;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
+import com.jolbox.bonecp.BoneCP;
+
 public class DAOFactoryTest {
 
     final static Logger log = Logger.getLogger(DAOFactoryTest.class);
@@ -21,7 +23,7 @@ public class DAOFactoryTest {
 
     @Test
     public void testGetInstance() {
-        // TODO fail("Not yet implemented");
+        assertNotNull(DAOFactory.getInstance());
     }
 
     @Test
@@ -104,5 +106,42 @@ public class DAOFactoryTest {
         hmap = DAOFactory.getPropertiesKeysValues(fichierProperties);
         log.trace("HashMap<String, String> hmap : " + hmap);
         assertNotNull(hmap);
+    }
+
+    @Test
+    public void testConnexionDriverJdbc() {
+        // test connexion driver jdbc réussie
+        HashMap<String, String> hmap = new HashMap<String, String>();
+        FileInputStream fichierProperties = DAOFactory.getFileInputStream("src/main/resources/dao.properties");
+        hmap = DAOFactory.getPropertiesKeysValues(fichierProperties);
+        DAOFactory.connexionDriverJdbc(hmap);
+
+    }
+
+    @Test(expected = DAOConfigurationException.class)
+    public void testConnexionDriverJdbcWithException() {
+        // test connexion driver jdbc échoué
+        HashMap<String, String> hmap = new HashMap<String, String>();
+        hmap.put("driver", "bidon");
+        DAOFactory.connexionDriverJdbc(hmap);
+    }
+
+    @Test
+    public void testConnexionBoneCP() {
+        // Création d'une configuration de pool réussie
+        HashMap<String, String> hmap = new HashMap<String, String>();
+        FileInputStream fichierProperties = DAOFactory.getFileInputStream("src/main/resources/dao.properties");
+        hmap = DAOFactory.getPropertiesKeysValues(fichierProperties);
+        assertNotNull(DAOFactory.connexionBoneCP(hmap));
+    }
+
+    @Test(expected = DAOConfigurationException.class)
+    public void testConnexionBoneCPWithException() {
+        // test d'une configuration de pool en échec
+        HashMap<String, String> hmap = new HashMap<String, String>();
+        hmap.put("url", "bidon");
+        hmap.put("nomutilisateur", "bidon");
+        hmap.put("motdepasse", "bidon");
+        BoneCP connexionPool = DAOFactory.connexionBoneCP(hmap);
     }
 }
