@@ -143,13 +143,18 @@
         <!-- ===== Gestion des plugins ===== -->
         <!-- To define the plugin version in your parent POM -->
         <pluginManagement>
-            <plugins>            
-            	<!-- Exécution de npm, Bower et Grunt -->
-				<plugin>
-	                <groupId>org.codehaus.mojo</groupId>
-	                <artifactId>exec-maven-plugin</artifactId>
-					<version>1.6.0</version>
-	            </plugin>
+            <plugins>
+                <plugin>
+        			<groupId>com.github.eirslett</groupId>
+        			<artifactId>frontend-maven-plugin</artifactId>
+        			<version>1.6</version>
+        		</plugin>            
+<!--             	Exécution de npm, Bower et Grunt -->
+<!-- 				<plugin> -->
+<!-- 	                <groupId>org.codehaus.mojo</groupId> -->
+<!-- 	                <artifactId>exec-maven-plugin</artifactId> -->
+<!-- 					<version>1.6.0</version> -->
+<!-- 	            </plugin> -->
 	            <!-- Plugin Jasmine pour les test unitaire Javascript -->
 	            <plugin>
 	            	<groupId>com.github.searls</groupId>
@@ -208,25 +213,73 @@
         
         <!-- To use the plugin goals in your POM or parent POM -->
         <plugins>
-	        <!-- Intégration du FrontEnd dans Maven -->
+	        <!-- Intégration du FrontEnd dans Maven (Node.js, npm, Bower et Grunt) -->
 			<plugin>
-		    	<groupId>org.codehaus.mojo</groupId>
-		        <artifactId>exec-maven-plugin</artifactId>
-	            <executions>
-	            	<!-- npm install -->
-		            <execution>
-		            	<id>exec-npm-install</id>
-			            <phase>generate-sources</phase>
-				        <configuration>
-				        	<executable>npm</executable>
-				            <arguments>
-				            	<argument>install</argument>
-				            </arguments>
-				        </configuration>
-		                <goals>
-		    	            <goal>exec</goal>
-		                </goals>
-		        	</execution>
+				<groupId>com.github.eirslett</groupId>
+				<artifactId>frontend-maven-plugin</artifactId>		 
+				<executions>
+		 			<!-- Installation en local de Node et mpm -->
+					<execution>
+						<id>install node and npm</id>
+						<goals>
+							<goal>install-node-and-npm</goal>
+						</goals>
+						<configuration>
+							<nodeVersion>v8.9.1</nodeVersion>
+							<npmVersion>5.5.1</npmVersion>
+						</configuration>
+					</execution>
+		 			<!-- Lancement de la commande "npm install" -->
+					<execution>
+						<id>npm install</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<configuration>
+							<arguments>install</arguments>
+						</configuration>
+					</execution>
+		 			<!-- Lancement de la commande "bower install" -->
+					<execution>
+						<id>bower install</id>
+						<goals>
+							<goal>bower</goal>
+						</goals>
+						<configuration>
+							<arguments>install</arguments>
+						</configuration>
+					</execution>
+		 			<!-- Lancement de la commande "grund prod" -->
+					<execution>
+						<id>grunt build</id>
+						<goals>
+							<goal>grunt</goal>
+						</goals>
+						<configuration>
+							<arguments>prod</arguments>
+						</configuration>
+					</execution>		 
+				</executions>
+			</plugin>
+				        
+<!-- 			<plugin> -->
+<!-- 		    	<groupId>org.codehaus.mojo</groupId> -->
+<!-- 		        <artifactId>exec-maven-plugin</artifactId> -->
+<!-- 	            <executions> -->
+<!-- 	            	npm install -->
+<!-- 		            <execution> -->
+<!-- 		            	<id>exec-npm-install</id> -->
+<!-- 			            <phase>generate-sources</phase> -->
+<!-- 				        <configuration> -->
+<!-- 				        	<executable>npm</executable> -->
+<!-- 				            <arguments> -->
+<!-- 				            	<argument>install</argument> -->
+<!-- 				            </arguments> -->
+<!-- 				        </configuration> -->
+<!-- 		                <goals> -->
+<!-- 		    	            <goal>exec</goal> -->
+<!-- 		                </goals> -->
+<!-- 		        	</execution> -->
 <!-- 	            	Bower install -->
 <!-- 		            <execution> -->
 <!-- 		            	<id>exec-bower-install</id> -->
@@ -241,22 +294,22 @@
 <!-- 		    	            <goal>exec</goal> -->
 <!-- 		                </goals> -->
 <!-- 		        	</execution> -->
-		        	<!-- Grunt prod -->
-		            <execution>
-		            	<id>exec-grunt-prod</id>
-			            <phase>process-resources</phase>
-				        <configuration>
-				        	<executable>grunt</executable>
-				            <arguments>
-				            	<argument>prod</argument>
-				            </arguments>
-				        </configuration>
-		                <goals>
-		    	            <goal>exec</goal>
-		                </goals>
-		        	</execution>
-		        </executions>
-		    </plugin>
+<!-- 		        	Grunt prod -->
+<!-- 		            <execution> -->
+<!-- 		            	<id>exec-grunt-prod</id> -->
+<!-- 			            <phase>process-resources</phase> -->
+<!-- 				        <configuration> -->
+<!-- 				        	<executable>grunt</executable> -->
+<!-- 				            <arguments> -->
+<!-- 				            	<argument>prod</argument> -->
+<!-- 				            </arguments> -->
+<!-- 				        </configuration> -->
+<!-- 		                <goals> -->
+<!-- 		    	            <goal>exec</goal> -->
+<!-- 		                </goals> -->
+<!-- 		        	</execution> -->
+<!-- 		        </executions> -->
+<!-- 		    </plugin> -->
 		    <!-- PhantomJS Maven Plugin pour jasmine -->
 		    <plugin>
 		    	<groupId>com.github.klieber</groupId>
