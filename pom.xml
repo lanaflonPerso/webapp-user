@@ -44,6 +44,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <application.name>Webapp-user</application.name>
+        <js-tests.skip>false</js-tests.skip>
     </properties>
                  	
     <!-- =============================================================== -->
@@ -140,9 +141,22 @@
 		</resources>
 		-->    
         <!-- ===== Gestion des plugins ===== -->
+        <!-- To define the plugin version in your parent POM -->
         <pluginManagement>
-            <plugins>
-            	<!-- Ajouter certaines informations du projet dans les jsp -->
+            <plugins>            
+            	<!-- Exécution de npm, Bower et Grunt -->
+				<plugin>
+	                <groupId>org.codehaus.mojo</groupId>
+	                <artifactId>exec-maven-plugin</artifactId>
+					<version>1.6.0</version>
+	            </plugin>
+	            <!-- Plugin Jasmine pour les test unitaire Javascript -->
+	            <plugin>
+	            	<groupId>com.github.searls</groupId>
+                	<artifactId>jasmine-maven-plugin</artifactId>
+                	<version>2.2</version>
+                </plugin>
+            	<!-- Ajouter certaines informations du pom maven dans les jsp -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-war-plugin</artifactId>
@@ -191,6 +205,104 @@
 	            </plugin>
             </plugins>
         </pluginManagement>
+        
+        <!-- To use the plugin goals in your POM or parent POM -->
+        <plugins>
+	        <!-- Intégration du FrontEnd dans Maven -->
+			<plugin>
+		    	<groupId>org.codehaus.mojo</groupId>
+		        <artifactId>exec-maven-plugin</artifactId>
+	            <executions>
+	            	<!-- npm install -->
+		            <execution>
+		            	<id>exec-npm-install</id>
+			            <phase>generate-sources</phase>
+				        <configuration>
+				        	<executable>npm</executable>
+				            <arguments>
+				            	<argument>install</argument>
+				            </arguments>
+				        </configuration>
+		                <goals>
+		    	            <goal>exec</goal>
+		                </goals>
+		        	</execution>
+	            	<!-- Bower install -->
+		            <execution>
+		            	<id>exec-bower-install</id>
+			            <phase>generate-sources</phase>
+				        <configuration>
+				        	<executable>bower</executable>
+				            <arguments>
+				            	<argument>install</argument>
+				            </arguments>
+				        </configuration>
+		                <goals>
+		    	            <goal>exec</goal>
+		                </goals>
+		        	</execution>
+		        	<!-- Grunt prod -->
+		            <execution>
+		            	<id>exec-grunt-prod</id>
+			            <phase>process-resources</phase>
+				        <configuration>
+				        	<executable>grunt</executable>
+				            <arguments>
+				            	<argument>prod</argument>
+				            </arguments>
+				        </configuration>
+		                <goals>
+		    	            <goal>exec</goal>
+		                </goals>
+		        	</execution>
+		        </executions>
+		    </plugin>
+		    <!-- PhantomJS Maven Plugin pour jasmine -->
+		    <plugin>
+		    	<groupId>com.github.klieber</groupId>
+		        <artifactId>phantomjs-maven-plugin</artifactId>
+		        <version>0.7</version>
+		        <executions>
+		        	<execution>
+		            	<goals>
+		              		<goal>install</goal>
+		            	</goals>
+		          	</execution>
+		        </executions>
+		        <configuration>
+		        	<version>1.9.7</version>
+		        	<skip>${js-tests.skip}</skip>
+		        </configuration>
+		    </plugin>
+	    	<!-- Plugin Jasmine -->
+	    	<plugin>
+        		<groupId>com.github.searls</groupId>
+                <artifactId>jasmine-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                	<skipJasmineTests>${js-tests.skip}</skipJasmineTests>
+                	<webDriverClassName>org.openqa.selenium.phantomjs.PhantomJSDriver</webDriverClassName>
+                	<webDriverCapabilities>
+                		<capability>
+                			<name>phantomjs.binary.path</name>
+                			<value>${phantomjs.binary}</value>
+                		</capability>
+                	</webDriverCapabilities>
+                    <jsSrcDir>${basedir}/src/main/webapp/inc/js</jsSrcDir>
+                    <jsTestSrcDir>${basedir}/src/test/javascript</jsTestSrcDir>
+                    <preloadSources>
+                    	<source>${basedir}/src/main/webapp/inc/js/libs/jquery.js</source>
+                    	<source>${basedir}/src/main/webapp/inc/js/libs/bootstrap.min.js</source>
+                    </preloadSources>
+                </configuration>
+        	</plugin>
+        </plugins>
     </build>  	
     
     <!-- =============================================================== -->
@@ -209,6 +321,26 @@
                             <report>index</report>
                             <report>summary</report>
                             <report>plugins</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            
+            <!-- JSlint et JSdoc avec Maven-JSTools-Plugin -->
+            <plugin>
+                <groupId>gr.abiss.mvn.plugins</groupId>
+                <artifactId>maven-jstools-plugin</artifactId>
+                <version>0.7</version>
+                <configuration>
+                    <jsDir>${basedir}/src/main/webapp/inc/js</jsDir>
+                    <includePrivate>true</includePrivate>
+                    <includeUndocumented>true</includeUndocumented>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>jslint</report>
+                            <report>jsdoc</report>
                         </reports>
                     </reportSet>
                 </reportSets>

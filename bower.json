@@ -1,0 +1,23 @@
+{
+  "name": "webapp-user",
+  "description": "test de grunt et bower sur le projet issu de https://github.com/thierryraimond/webapp-user",
+  "main": "",
+  "authors": [
+    "Thierry Raimond"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "font-awesome": "fontawesome#^4.7.0",
+    "jquery": "^3.2.1"
+  }
+}
