@@ -127,6 +127,6 @@ grunt.loadNpmTasks('grunt-contrib-watch');
 // 4. Nous disons à Grunt quoi faire lorsque nous tapons "grunt" dans la console.
 // exemple : "grunt dev" ou "grunt prod".
 grunt.registerTask('dev', ['copy', 'concat', 'uglify', 'imagemin', 'sass', 'watch']);
-grunt.registerTask('prod', ['copy', 'concat', 'uglify', 'imagemin', 'sass']);
+grunt.registerTask('prod', ['copy', 'concat', 'uglify', 'imagemin']);
 
 };
