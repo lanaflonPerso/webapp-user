@@ -4,6 +4,7 @@
   "description": "test de grunt et bower intégré dans le build maven sur le projet issu de https://github.com/thierryraimond/webapp-user",
   "author": "Thierry Raimond",
   "devDependencies": {
+    "bower": "^1.8.2",
     "grunt": "^1.0.1",
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-imagemin": "^2.0.1",
