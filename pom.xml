@@ -213,6 +213,29 @@
         
         <!-- To use the plugin goals in your POM or parent POM -->
         <plugins>
+        
+        	<plugin>
+		    	<groupId>org.codehaus.mojo</groupId>
+		        <artifactId>exec-maven-plugin</artifactId>
+	            <executions>
+	        		<!-- gem install sass -->
+		            <execution>
+		            	<id>exec-gem-install-sass</id>
+			            <phase>generate-sources</phase>
+				        <configuration>
+				        	<executable>gem</executable>
+				            <arguments>
+				            	<argument>install</argument>
+				            	<argument>sass</argument>
+				            </arguments>
+				        </configuration>
+		                <goals>
+		    	            <goal>exec</goal>
+		                </goals>
+		        	</execution>
+		        </executions>
+		    </plugin>
+        
 	        <!-- Intégration du FrontEnd dans Maven (Node.js, npm, Bower et Grunt) -->
 			<plugin>
 				<groupId>com.github.eirslett</groupId>
@@ -251,7 +274,7 @@
 					</execution>
 		 			<!-- Lancement de la commande "grund prod" -->
 					<execution>
-						<id>grunt build</id>
+						<id>grunt prod</id>
 						<goals>
 							<goal>grunt</goal>
 						</goals>
