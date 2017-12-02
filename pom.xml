@@ -262,6 +262,38 @@
 					</execution>		 
 				</executions>
 			</plugin>
+
+	 			<!-- Minifie les fichiers js et css -->
+<!-- 			<plugin> -->
+<!-- 				<groupId>net.alchim31.maven</groupId> -->
+<!-- 			  	<artifactId>yuicompressor-maven-plugin</artifactId> -->
+<!-- 			  	<version>1.3.0</version> -->
+<!-- 			  	<executions> -->
+<!-- 			    	<execution> -->
+<!-- 			      		<id>compress-js</id> -->
+<!-- 			      		<goals> -->
+<!-- 			        		<goal>compress</goal> -->
+<!-- 			      		</goals>		      		 -->
+<!-- 			    	</execution> -->
+<!-- 			  	</executions> -->
+<!-- 			  	<configuration> -->
+<!-- 			  		<gzip>true</gzip> -->
+<!-- 			  		<nosuffix>true</nosuffix> -->
+<!-- 			  		<sourceDirectory>src/main/webapp/inc/js</sourceDirectory> -->
+<!-- 			  		<outputDirectory>${basedir}/src/main/webapp/inc/js</outputDirectory> -->
+<!-- 			  		<aggregations> -->
+<!-- 			  			<aggregation> -->
+<!-- 			  				<removeIncluded>true</removeIncluded> -->
+<!-- 			  				<insertNewLine>false</insertNewLine> -->
+<!-- 			  				<output>${basedir}/src/main/webapp/inc/js/all.js</output> -->
+<!-- 			  				<inputDir>${basedir}/src/main/webapp/inc/js/</inputDir> -->
+<!-- 							<excludes> -->
+<!-- 								<exclude>${basedir}/src/main/webapp/inc/js/libs/jquery.min.js</exclude> -->
+<!-- 							</excludes> -->
+<!-- 			  			</aggregation> -->
+<!-- 			  		</aggregations> -->
+<!-- 			  	</configuration> -->
+<!-- 			</plugin>			 -->
 				        
 <!-- 			<plugin> -->
 <!-- 		    	<groupId>org.codehaus.mojo</groupId> -->
@@ -351,7 +383,7 @@
                     <jsSrcDir>${basedir}/src/main/webapp/inc/js</jsSrcDir>
                     <jsTestSrcDir>${basedir}/src/test/javascript</jsTestSrcDir>
                     <preloadSources>
-                    	<source>${basedir}/src/main/webapp/inc/js/libs/jquery.js</source>
+                    	<source>${basedir}/src/main/webapp/inc/js/libs/jquery.min.js</source>
                     	<source>${basedir}/src/main/webapp/inc/js/libs/bootstrap.min.js</source>
                     </preloadSources>
                 </configuration>

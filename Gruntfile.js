@@ -1,4 +1,9 @@
-﻿module.exports = function(grunt) {
+﻿// serve-static instead connect.static
+var serveStatic = require('serve-static');
+// serve-index instead connect.directory
+var serverIndex = require('serve-index');
+
+module.exports = function(grunt) {
 
 // 1. Toutes les configurations vont ici: 
 grunt.initConfig({
@@ -40,7 +45,7 @@ grunt.initConfig({
                 expand: true, // Etendre la copie pour récupérer le contenu du repertoire
                 flatten: true, // Ne remonte pas l'arborescence depuis bower_components
                 dest: '<%= app.dist %>/inc/js/libs/', // Répertoire de destination
-                src: ['bower_components/jquery/dist/jquery.js'] // Fichier cible
+                src: ['bower_components/jquery/dist/jquery.min.js'] // Fichier cible
             },
             // font-awesome css
             {
@@ -56,8 +61,8 @@ grunt.initConfig({
             // 2. la configuration pour la concaténation va ici.
             dist: {
             src: [
-                '<%= app.dist %>/inc/js/libs/*.js', // tous les JS dans libs
-                '<%= app.dist %>/inc/js/login.js'  // ce fichier là
+                //'<%= app.dist %>/inc/js/libs/*.js', // tous les JS dans libs
+                '<%= app.dist %>/inc/js/*.js'  // tous les fichiers js de ce repertoire
             ],
             dest: '<%= app.dist %>/inc/js/prod/production.js'
         }
@@ -73,7 +78,7 @@ grunt.initConfig({
             files: [{
                 expand: true,
                 cwd: '<%= app.dist %>/inc/img/',
-                src: ['**/*.{png,jpg,gif}'],
+                src: ['*.{png,jpg,gif}'],
                 dest: '<%= app.dist %>/inc/img/prod/'
             }]
         }
@@ -87,6 +92,27 @@ grunt.initConfig({
                 '<%= app.dist %>/inc/css/prod/style.min.css': '<%= app.dist %>/inc/css/style.scss'
             }
         } 
+    },
+    less: {
+    	development: {
+    		options: {
+    			paths: ['<%= app.dist %>/inc/css']
+    		},
+    		files: {
+    			'<%= app.dist %>/inc/css/prod/global.css': '<%= app.dist %>/inc/css/style.less'
+    		}
+    	}
+    },
+    cssmin: {
+    	target: {
+    		files: [{
+    			expand: true,
+    			cwd: '<%= app.dist %>/inc/css/prod',
+    			src: ['*.css', '!*.min.css'],
+    			dest: '<%= app.dist %>/inc/css/prod',
+    			ext: '.min.css'
+    		}]
+    	}
     },
     watch: {
         options: {
@@ -107,12 +133,14 @@ grunt.initConfig({
             }
         },
         css: {
-            files: ['<%= app.dist %>/inc/css/*.scss'],
-            tasks: ['sass'],
+//            files: ['<%= app.dist %>/inc/css/*.scss'],
+//            tasks: ['sass'],
+            files: ['<%= app.dist %>/inc/css/*.less'],
+            tasks: ['less', 'cssmin'],
             options: {
                 spawn: false,
             }
-        }       
+        }
     }
 });
 
@@ -122,11 +150,15 @@ grunt.loadNpmTasks('grunt-contrib-concat');
 grunt.loadNpmTasks('grunt-contrib-uglify');
 grunt.loadNpmTasks('grunt-contrib-imagemin');
 grunt.loadNpmTasks('grunt-contrib-sass');
+grunt.loadNpmTasks('grunt-contrib-less');
+grunt.loadNpmTasks('grunt-contrib-cssmin');
 grunt.loadNpmTasks('grunt-contrib-watch');
+grunt.loadNpmTasks('grunt-contrib-connect');
+grunt.loadNpmTasks('grunt-connect-proxy');
 
 // 4. Nous disons à Grunt quoi faire lorsque nous tapons "grunt" dans la console.
 // exemple : "grunt dev" ou "grunt prod".
-grunt.registerTask('dev', ['copy', 'concat', 'uglify', 'imagemin', 'sass', 'watch']);
-grunt.registerTask('prod', ['copy', 'concat', 'uglify', 'imagemin']);
+grunt.registerTask('dev', ['copy', 'concat', 'uglify', 'imagemin', 'less', 'cssmin', 'watch']);
+grunt.registerTask('prod', ['copy', 'concat', 'uglify', 'imagemin', 'less', 'cssmin']);
 
 };
