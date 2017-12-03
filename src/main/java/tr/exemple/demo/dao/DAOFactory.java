@@ -90,9 +90,9 @@ public class DAOFactory {
     /*
      * Méthodes de récupération de l'implémentation des différents DAO (un seul pour le moment)
      */
-    public UtilisateurDao getUtilisateurDao() {
-        return new UtilisateurDaoImpl(this);
-    }
+    // public UtilisateurDao getUtilisateurDao() {
+    // return new UtilisateurDaoImpl(this);
+    // }
 
     /**
      * Retourne InputStream qui prouve l'existence du fichier Properties dans le ClassLoader ici src/main/resources
