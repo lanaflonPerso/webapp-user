@@ -52,7 +52,6 @@ public class DAOFactory {
         // FileInputStream fichierProperties = getFileInputStream(FICHIER_PROPERTIES);
 
         if (fichierProperties == null) {
-            log.error("Le fichier properties " + FICHIER_PROPERTIES + " est introuvable.");
             throw new DAOConfigurationException("Le fichier properties " + FICHIER_PROPERTIES + " est introuvable.");
         } else {
             log.info("Le fichier " + FICHIER_PROPERTIES + " a été correctement chargé.");
@@ -91,9 +90,9 @@ public class DAOFactory {
     /*
      * Méthodes de récupération de l'implémentation des différents DAO (un seul pour le moment)
      */
-    // public UtilisateurDao getUtilisateurDao() {
-    // return new UtilisateurDaoImpl( this );
-    // }
+    public UtilisateurDao getUtilisateurDao() {
+        return new UtilisateurDaoImpl(this);
+    }
 
     /**
      * Retourne InputStream qui prouve l'existence du fichier Properties dans le ClassLoader ici src/main/resources
@@ -125,7 +124,6 @@ public class DAOFactory {
             fichierProperties = new FileInputStream(cheminFichierProperties);
             log.info("SUCCESS : le fichier " + cheminFichierProperties + " a bien été trouvé.");
         } catch (FileNotFoundException e) {
-            log.error("Le fichier properties " + cheminFichierProperties + " est introuvable.");
             throw new DAOConfigurationException(
                     "Le fichier properties " + cheminFichierProperties + " est introuvable.", e);
         }
@@ -159,10 +157,8 @@ public class DAOFactory {
             fichierProperties.close();
             log.trace("Fermeture de l'input stream " + fichierProperties);
         } catch (FileNotFoundException e) {
-            log.error("Le fichier properties " + FICHIER_PROPERTIES + " est introuvable.");
             throw new DAOConfigurationException("Le fichier properties " + FICHIER_PROPERTIES + " est introuvable.", e);
         } catch (IOException e) {
-            log.error("Impossible de charger le fichier properties " + FICHIER_PROPERTIES);
             throw new DAOConfigurationException("Impossible de charger le fichier properties " + FICHIER_PROPERTIES, e);
         }
         return hmap;
@@ -179,7 +175,6 @@ public class DAOFactory {
             Class.forName(hmap.get(PROPERTY_DRIVER));
             log.trace("Connexion au driver jdbc : \"" + hmap.get(PROPERTY_DRIVER) + "\" avec succès");
         } catch (ClassNotFoundException e) {
-            log.error("Le driver est introuvable dans le classpath.");
             throw new DAOConfigurationException("Le driver est introuvable dans le classpath.", e);
         }
     }
@@ -209,7 +204,6 @@ public class DAOFactory {
              */
             return new BoneCP(config);
         } catch (SQLException e) {
-            log.error("Erreur de configuration du pool de connexions.");
             throw new DAOConfigurationException("Erreur de configuration du pool de connexions.", e);
         }
     }
