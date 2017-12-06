@@ -45,6 +45,7 @@ public class DAOFactory {
      * 
      * @return une instance de la Factory
      * @throws DAOConfigurationException
+     *             Lance une exception
      */
     public static DAOFactory getInstance() throws DAOConfigurationException {
 
@@ -189,6 +190,7 @@ public class DAOFactory {
      * Connexion au driver jdbc
      * 
      * @param hmap
+     *            Contient les données du fichier properties
      */
     protected static void connexionDriverJdbc(HashMap<String, String> hmap) {
         // Connexion au driver jdbc
@@ -246,7 +248,6 @@ public class DAOFactory {
      * 
      * @param hmap
      *            Contient les données du fichier properties
-     * @see https://dev.mysql.com/doc/connector-j/5.1/en/connector-j-reference-using-ssl.html
      */
     protected static void SetKeysSystem(HashMap<String, String> hmap) {
         System.setProperty("javax.net.ssl.keyStore", hmap.get(PROPERTY_KEY_STORE_PATH));
