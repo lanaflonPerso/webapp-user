@@ -139,6 +139,7 @@ public class DAOFactoryTest {
     public void testConnexionBoneCPWithException() {
         // test d'une configuration de pool en échec
         HashMap<String, String> hmap = new HashMap<String, String>();
+        hmap.put("ssl", "false");
         hmap.put("url", "bidon");
         hmap.put("nomutilisateur", "bidon");
         hmap.put("motdepasse", "bidon");

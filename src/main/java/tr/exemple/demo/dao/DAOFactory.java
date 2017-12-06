@@ -22,6 +22,14 @@ public class DAOFactory {
     private static final String PROPERTY_DRIVER = "driver";
     private static final String PROPERTY_NOM_UTILISATEUR = "nomutilisateur";
     private static final String PROPERTY_MOT_DE_PASSE = "motdepasse";
+    private static final String PROPERTY_SSL = "ssl";
+    private static final String PROPERTY_VERIFY_SERVER_CERTIFICATE = "verifyservercertificate";
+    private static final String PROPERTY_USE_SSL = "usessl";
+    private static final String PROPERTY_REQUIRE_SSL = "requiressl";
+    private static final String PROPERTY_NOM_UTILISATEUR_SSL = "nomutilisateurssl";
+    private static final String PROPERTY_MOT_DE_PASSE_SSL = "motdepassessl";
+    private static final String PROPERTY_TRUST_STORE_PATH = "truststorepath";
+    private static final String PROPERTY_KEY_STORE_PATH = "keystorepath";
 
     final static Logger log = Logger.getLogger(DAOFactory.class);
 
@@ -58,6 +66,11 @@ public class DAOFactory {
 
             // Charge la liste des propriétés du fichier properties dans la map
             hmap = getPropertiesKeysValues(fichierProperties);
+        }
+
+        if (hmap.get(PROPERTY_SSL).contentEquals("true")) {
+            SetKeysSystem(hmap);
+            log.info("Chargement des clés SSL dans le système.");
         }
 
         // Connexion au driver jdbc
@@ -151,8 +164,16 @@ public class DAOFactory {
             /* Ajoute le couple (clé, valeur) de chaque ligne dans la HashMap */
             hmap.put(PROPERTY_URL, properties.getProperty(PROPERTY_URL)); // url
             hmap.put(PROPERTY_DRIVER, properties.getProperty(PROPERTY_DRIVER)); // driver
-            hmap.put(PROPERTY_NOM_UTILISATEUR, properties.getProperty(PROPERTY_NOM_UTILISATEUR)); // nomUtilisateur
-            hmap.put(PROPERTY_MOT_DE_PASSE, properties.getProperty(PROPERTY_MOT_DE_PASSE)); // motDePasse
+            hmap.put(PROPERTY_NOM_UTILISATEUR, properties.getProperty(PROPERTY_NOM_UTILISATEUR)); // nomutilisateur
+            hmap.put(PROPERTY_MOT_DE_PASSE, properties.getProperty(PROPERTY_MOT_DE_PASSE)); // motdepasse
+            hmap.put(PROPERTY_SSL, properties.getProperty(PROPERTY_SSL)); // ssl
+            hmap.put(PROPERTY_VERIFY_SERVER_CERTIFICATE, properties.getProperty(PROPERTY_VERIFY_SERVER_CERTIFICATE)); // verifyservercertificate
+            hmap.put(PROPERTY_USE_SSL, properties.getProperty(PROPERTY_USE_SSL)); // usessl
+            hmap.put(PROPERTY_REQUIRE_SSL, properties.getProperty(PROPERTY_REQUIRE_SSL)); // requiressl
+            hmap.put(PROPERTY_NOM_UTILISATEUR_SSL, properties.getProperty(PROPERTY_NOM_UTILISATEUR_SSL)); // nomutilisateurssl
+            hmap.put(PROPERTY_MOT_DE_PASSE_SSL, properties.getProperty(PROPERTY_MOT_DE_PASSE_SSL)); // motdepassessl
+            hmap.put(PROPERTY_TRUST_STORE_PATH, properties.getProperty(PROPERTY_TRUST_STORE_PATH)); // truststorepath
+            hmap.put(PROPERTY_KEY_STORE_PATH, properties.getProperty(PROPERTY_KEY_STORE_PATH)); // keystorepath
             log.info("Tous les champs ont été récupérés.");
             fichierProperties.close();
             log.trace("Fermeture de l'input stream " + fichierProperties);
@@ -173,7 +194,7 @@ public class DAOFactory {
         // Connexion au driver jdbc
         try {
             Class.forName(hmap.get(PROPERTY_DRIVER));
-            log.trace("Connexion au driver jdbc : \"" + hmap.get(PROPERTY_DRIVER) + "\" avec succès");
+            log.info("Connexion au driver jdbc : \"" + hmap.get(PROPERTY_DRIVER) + "\" avec succès");
         } catch (ClassNotFoundException e) {
             throw new DAOConfigurationException("Le driver est introuvable dans le classpath.", e);
         }
@@ -191,10 +212,20 @@ public class DAOFactory {
             log.trace("Création d'une configuration de pool de connexions via l'objet BoneCPConfig "
                     + "et les différents setters associés.");
             BoneCPConfig config = new BoneCPConfig();
-            /* Mise en place de l'URL, du nom et du mot de passe */
-            config.setJdbcUrl(hmap.get(PROPERTY_URL));
-            config.setUsername(hmap.get(PROPERTY_NOM_UTILISATEUR));
-            config.setPassword(hmap.get(PROPERTY_MOT_DE_PASSE));
+
+            if (hmap.get(PROPERTY_SSL).contentEquals("true")) {
+                /* Mise en place de la configuration avec SSL */
+                config.setJdbcUrl(hmap.get(PROPERTY_URL) + hmap.get(PROPERTY_VERIFY_SERVER_CERTIFICATE)
+                        + hmap.get(PROPERTY_USE_SSL) + hmap.get(PROPERTY_REQUIRE_SSL));
+                config.setUsername(hmap.get(PROPERTY_NOM_UTILISATEUR_SSL));
+                config.setPassword(hmap.get(PROPERTY_MOT_DE_PASSE_SSL));
+            } else {
+                /* Mise en place de l'URL, du nom et du mot de passe sans SSL */
+                config.setJdbcUrl(hmap.get(PROPERTY_URL));
+                config.setUsername(hmap.get(PROPERTY_NOM_UTILISATEUR));
+                config.setPassword(hmap.get(PROPERTY_MOT_DE_PASSE));
+            }
+
             /* Paramétrage de la taille du pool */
             config.setMinConnectionsPerPartition(5);
             config.setMaxConnectionsPerPartition(10);
@@ -206,5 +237,22 @@ public class DAOFactory {
         } catch (SQLException e) {
             throw new DAOConfigurationException("Erreur de configuration du pool de connexions.", e);
         }
+    }
+
+    /**
+     * Fournit à l'API JSSE les fichiers keystore et truststore qui seront invoquée par la machine virtuelle java (JVM)
+     * lors de l'établissement de la connexion sécurisée. Pour pouvoir fournir ces fichiers à JSSE, il faut déclarer
+     * quatre variables système pour la JVM.
+     * 
+     * @param hmap
+     *            Contient les données du fichier properties
+     * @see https://dev.mysql.com/doc/connector-j/5.1/en/connector-j-reference-using-ssl.html
+     */
+    protected static void SetKeysSystem(HashMap<String, String> hmap) {
+        System.setProperty("javax.net.ssl.keyStore", hmap.get(PROPERTY_KEY_STORE_PATH));
+        System.setProperty("javax.net.ssl.keyStorePassword", hmap.get(PROPERTY_MOT_DE_PASSE_SSL));
+        System.setProperty("javax.net.ssl.trustStore", hmap.get(PROPERTY_TRUST_STORE_PATH));
+        System.setProperty("javax.net.ssl.trustStorePassword", hmap.get(PROPERTY_MOT_DE_PASSE_SSL));
+        // System.setProperty("javax.net.debug", "all");
     }
 }
