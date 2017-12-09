@@ -187,8 +187,53 @@ public class UtilisateurDaoImplTest extends DBTestCase {
     }
 
     @Test
-    public void testCreer() {
+    @DisplayName("Tentative d'ajout d'un nouvel utilisateur dans la bdd.")
+    public void testCreerOK() {
+        Connection connexion = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet valeursAutoGenerees = null;
+        String sql = "INSERT INTO Utilisateur (email, mot_de_passe, nom, date_inscription) VALUES (?, ?, ?, NOW())";
+        String email = "unEmailBidon@test.fr";
+        String motDePasse = "unMotDePasseBidon";
+        String nom = "unNomBidon";
+        Utilisateur utilisateur = new Utilisateur();
+        utilisateur.setEmail(email);
+        utilisateur.setMotDePasse(motDePasse);
+        utilisateur.setNom(nom);
 
+        try {
+            /* Récupération d'une connexion depuis la Factory */
+            connexion = DriverManager.getConnection(TEST_BDD_CONNECTION_URL, TEST_BDD_USERNAME, TEST_BDD_PASSWORD);
+            preparedStatement = initialisationRequetePreparee(connexion, sql, true, utilisateur.getEmail(),
+                    utilisateur.getMotDePasse(), utilisateur.getNom());
+            int statut = preparedStatement.executeUpdate();
+            log.trace("statut de la requête d'insertion = " + statut);
+            /* Analyse du statut retourné par la requête d'insertion */
+            if (statut == 0) {
+                throw new DAOException("Échec de la création de l'utilisateur, aucune ligne ajoutée dans la table.");
+            }
+            /* Récupération de l'id auto-généré par la requête d'insertion */
+            valeursAutoGenerees = preparedStatement.getGeneratedKeys();
+            if (valeursAutoGenerees.next()) {
+                /* Puis initialisation de la propriété id du bean Utilisateur avec sa valeur */
+                utilisateur.setId(valeursAutoGenerees.getLong(1));
+            } else {
+                throw new DAOException("Échec de la création de l'utilisateur en base, aucun ID auto-généré retourné.");
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        } finally {
+            fermeturesSilencieuses(valeursAutoGenerees, preparedStatement, connexion);
+        }
+        log.trace("id = " + utilisateur.getId());
+        // TODO assertion de vérification du premier id autoincrementé avec l'id généré = devrait toujours être égale à
+        // 3
+    }
+
+    @Test
+    @DisplayName("Tentative en échec d'un ajout d'un utilisateur avec un email déjà existant dans la bdd.")
+    public void testCreerKO() {
+        // TODO devrait lancer une exception de duplication
     }
 
     /*
