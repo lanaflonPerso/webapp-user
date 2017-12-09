@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <UTILISATEUR id='1' email='coyote@mail.acme' mot_de_passe='7629ae53dbd1743ebbec21bc6bccbf45' nom='Coyote' date_inscription='2017-11-20 11:31:08'  />
+
+    <UTILISATEUR id='2' email='jadorejquery@unefois.be' mot_de_passe='0094bcab75591116f732cc180949c16d' nom='Thunderseb' date_inscription='2017-11-20 11:31:08'  />
+
+</dataset>
