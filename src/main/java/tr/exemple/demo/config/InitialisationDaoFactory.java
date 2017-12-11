@@ -37,8 +37,8 @@ public class InitialisationDaoFactory implements ServletContextListener {
             throw new ConfigException("Le fichier " + LOG4J_PROPERTIES_FILE + " est introuvable.", e);
         }
 
-        /* Instanciation de notre DAOFactory */
-        this.daoFactory = DAOFactory.getInstance();
+        /* Instanciation de notre DAOFactory en mode production */
+        this.daoFactory = DAOFactory.getInstance(true);
         /* Enregistrement dans un attribut ayant pour portée toute l'application */
         servletContext.setAttribute(ATT_DAO_FACTORY, this.daoFactory);
 

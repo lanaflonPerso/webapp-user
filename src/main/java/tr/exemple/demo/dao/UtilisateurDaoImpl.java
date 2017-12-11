@@ -56,7 +56,29 @@ public class UtilisateurDaoImpl implements UtilisateurDao {
     // TODO à implémenter
     @Override
     public Utilisateur authentifier(String email, String motDePasse) throws DAOException {
+        Connection connexion = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         Utilisateur utilisateur = null;
+        String sql = "" + "SELECT * " + "FROM utilisateur " + "WHERE email = ? AND mot_de_passe = MD5(?)";
+
+        try {
+            /* Récupération d'une connexion depuis la Factory */
+            connexion = daoFactory.getConnection();
+            preparedStatement = initialisationRequetePreparee(connexion, sql, false, email, motDePasse);
+            resultSet = preparedStatement.executeQuery();
+            /*
+             * Parcours de la ligne de données de l'éventuel ResulSet retourné
+             */
+            if (resultSet.next()) {
+                utilisateur = map(resultSet);
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        } finally {
+            fermeturesSilencieuses(resultSet, preparedStatement, connexion);
+        }
+
         return utilisateur;
     }
 

@@ -89,63 +89,113 @@ public class DAOFactory {
      * Méthode chargée de récupérer les informations de connexion à la base de données, charger le driver JDBC,
      * configurer le pool de connexions via BoneCP et retourner une instance de la Factory.
      * 
+     * <p>
+     * En fonction du paramètre mentionné, le DAO de production sera chargé si ce sera celui de développement.
+     * </p>
+     * <ul>
+     * <li><b>Production</b> : utilisation d'un pool de connexions via BoneCP et usage du SSL pour communiquer avec la
+     * base de données.</li>
+     * <li><b>Développement</b> : connexion classique avec le minimum requis avec l'utilisation du bon vieux
+     * DriverManager. Il n'y a pas de gestion de pool de connexions ni de cryptage SSL. Le but étant de faire des tests
+     * sur une base de données créée à cette effet.</li>
+     * </ul>
+     * 
+     * @param prod
+     *            de type booléen, définit le mode du DAO : <b>true</b> pour production ou <b>false</b> pour
+     *            développement
      * @return une instance de la Factory
      * @throws DAOConfigurationException
      *             Lance une exception lié à une erreur de configuration du DAO
      */
-    public static DAOFactory getInstance() throws DAOConfigurationException {
+    public static DAOFactory getInstance(Boolean prod) throws DAOConfigurationException {
 
-        log.trace("Initialisation du DAOFactory.");
+        DAOFactory instance = null;
 
-        /* Hashmap du couple (clé, valeur) du fichier properties */
-        HashMap<String, String> hmap = new HashMap<String, String>();
+        /* si prod est vrai alors on initialise le DAOFactory de production */
+        if (prod) {
+            log.trace("Initialisation du DAOFactory de production.");
 
-        /* Connexion Pool de BoneCP initialisée à null */
-        BoneCP connectionPool = null;
+            /* Hashmap du couple (clé, valeur) du fichier properties */
+            HashMap<String, String> hmap = new HashMap<String, String>();
 
-        /* Charge le fichier properties */
-        InputStream fichierProperties = getInputStream(FICHIER_PROPERTIES);
-        // FileInputStream fichierProperties = getFileInputStream(FICHIER_PROPERTIES);
+            /* Connexion Pool de BoneCP initialisée à null */
+            BoneCP connectionPool = null;
 
-        /* Charge la liste des propriétés du fichier properties dans la map */
-        hmap = getPropertiesKeysValues(fichierProperties);
+            /* Charge le fichier properties */
+            InputStream fichierProperties = getInputStream(FICHIER_PROPERTIES);
+            // FileInputStream fichierProperties = getFileInputStream(FICHIER_PROPERTIES);
 
-        if (hmap.get(PROPERTY_SSL).contentEquals("true")) {
-            SetKeysSystem(hmap);
-            log.info("Chargement des clés SSL dans le système.");
+            /* Charge la liste des propriétés du fichier properties dans la map */
+            hmap = getPropertiesKeysValues(fichierProperties);
+
+            if (hmap.get(PROPERTY_SSL).contentEquals("true")) {
+                SetKeysSystem(hmap);
+                log.info("Chargement des clés SSL dans le système.");
+            }
+
+            /* Connexion au driver jdbc */
+            connexionDriverJdbc(hmap);
+
+            /*
+             * Création d'une configuration de pool de connexions via l'objet BoneCPConfig et les différents setters
+             * associés.
+             */
+            connectionPool = connexionBoneCP(hmap);
+
+            /*
+             * Enregistrement du pool créé dans une variable d'instance via un appel au constructeur de DAOFactory
+             */
+            instance = new DAOFactory(connectionPool);
+            log.info("Instanciation du DAOFactory et création du pool de connexions : " + instance);
+        } else {
+            /* Sinon on itialise le DAOFactory de développement */
+            log.trace("Tentative d'instanciation du DAO de développement.");
+            try {
+                Class.forName(TEST_BDD_DRIVER_CLASS);
+                log.info("Classe du driver JDBC chargé avec succés!");
+            } catch (ClassNotFoundException e) {
+                throw new DAOConfigurationException("La classe du driver JDBC n'a pas été trouvé.", e);
+            }
+            instance = new DAOFactory(TEST_BDD_CONNECTION_URL, TEST_BDD_USERNAME, TEST_BDD_PASSWORD);
+            log.info("Connexion correctement instanciée à la base de données de développement : " + instance);
         }
 
-        /* Connexion au driver jdbc */
-        connexionDriverJdbc(hmap);
-
-        /*
-         * Création d'une configuration de pool de connexions via l'objet BoneCPConfig et les différents setters
-         * associés.
-         */
-        connectionPool = connexionBoneCP(hmap);
-
-        /*
-         * Enregistrement du pool créé dans une variable d'instance via un appel au constructeur de DAOFactory
-         */
-        DAOFactory instance = new DAOFactory(connectionPool);
-        log.info("Instanciation du DAOFactory et création du pool de connexions : " + instance);
         return instance;
     }
 
     /**
-     * Méthode chargée de récupérer une connexion à la base de données. setAutoCommit(false) pour que l'on puisse gérer
-     * les transactions nous-mêmes.
+     * Méthode chargée de récupérer une connexion à la base de données, en fonction du mode du DAO: <br>
+     * Si la variable BoneCP connectionPool n'est pas null alors la connexion utilisée sera celle de production<br>
+     * Sinon ce sera celle de développement.
+     * 
+     * <p>
+     * setAutoCommit(false) pour que l'on puisse gérer les transactions nous-mêmes.
+     * </p>
      * 
      * @return La connexion à la base de données de type Connection.
      */
     Connection getConnection() {
         Connection connexion = null;
-        try {
-            connexion = connectionPool.getConnection();
-            connexion.setAutoCommit(false);
-        } catch (SQLException e) {
-            throw new DAOConfigurationException("La connexion à la base de données a échoué.", e);
+        if (this.connectionPool != null) {
+            log.trace("Tentative de connexion à la base de données de production.");
+            try {
+                connexion = connectionPool.getConnection();
+                connexion.setAutoCommit(false);
+                log.info("Connexion à la base de données de production réussie : " + connexion);
+            } catch (SQLException e) {
+                throw new DAOConfigurationException("La connexion à la base de données a échoué.", e);
+            }
+        } else {
+            log.trace("Tentative de connexion à la base de données de développement");
+            try {
+                connexion = DriverManager.getConnection(url, username, password);
+                connexion.setAutoCommit(false);
+                log.info("Connexion à la base de données de développement réussie : " + connexion);
+            } catch (SQLException e) {
+                throw new DAOConfigurationException("La connexion à la base de données a échoué.", e);
+            }
         }
+
         return connexion;
     }
 
@@ -156,46 +206,6 @@ public class DAOFactory {
      */
     public UtilisateurDao getUtilisateurDao() {
         return new UtilisateurDaoImpl(this);
-    }
-
-    /**
-     * Charge le driver JDBC MySQL et se connecte à la base de données.
-     * 
-     * @return la connexion instanciée à la base de données.
-     * @throws DAOConfigurationException
-     *             Lance une exception lorsque la classe du driver JDBC n'a pas été trouvé.
-     */
-    public static DAOFactory getInstanceDev() throws DAOConfigurationException {
-        log.trace("Tentative d'instanciation du DAO de développement.");
-        try {
-            Class.forName(TEST_BDD_DRIVER_CLASS);
-            log.info("Classe du driver JDBC chargé avec succés!");
-        } catch (ClassNotFoundException e) {
-            throw new DAOConfigurationException("La classe du driver JDBC n'a pas été trouvé.", e);
-        }
-        DAOFactory instance = new DAOFactory(TEST_BDD_CONNECTION_URL, TEST_BDD_USERNAME, TEST_BDD_PASSWORD);
-        log.info("Connexion correctement instanciée à la base de données de développement!");
-        return instance;
-    }
-
-    /**
-     * Retourne la connexion à la base de données
-     * 
-     * @return la connexion à la base de données
-     * @throws DAOConfigurationException
-     *             Lance une exception lorsque la connexion à la base de données échoue.
-     */
-    public Connection getConnectionDev() throws DAOConfigurationException {
-        Connection connexion = null;
-        log.trace("Tentative de connexion à la base de données de développement");
-        try {
-            connexion = DriverManager.getConnection(url, username, password);
-            connexion.setAutoCommit(false);
-            log.info("Connexion à la base de données de développement réussie : " + connexion);
-        } catch (SQLException e) {
-            throw new DAOConfigurationException("La connexion à la base de données a échoué.", e);
-        }
-        return connexion;
     }
 
     /**
@@ -313,9 +323,10 @@ public class DAOFactory {
      * @return BoneCP Création du pool à partir de la configuration, via l'objet BoneCP
      */
     protected static BoneCP connexionBoneCP(HashMap<String, String> hmap) {
+        BoneCP connectionPool = null;
+        log.trace("Tentative de création d'une configuration de pool de connexions via l'objet BoneCPConfig "
+                + "et les différents setters associés.");
         try {
-            log.trace("Création d'une configuration de pool de connexions via l'objet BoneCPConfig "
-                    + "et les différents setters associés.");
             BoneCPConfig config = new BoneCPConfig();
 
             if (hmap.get(PROPERTY_SSL).contentEquals("true")) {
@@ -337,10 +348,12 @@ public class DAOFactory {
             config.setPartitionCount(2);
 
             /* Création du pool à partir de la configuration, via l'objet BoneCP */
-            return new BoneCP(config);
+            connectionPool = new BoneCP(config);
         } catch (SQLException e) {
             throw new DAOConfigurationException("Erreur de configuration du pool de connexions.", e);
         }
+        log.info("Création réussie d'une configuration de pool de connexions : " + connectionPool);
+        return connectionPool;
     }
 
     /**
