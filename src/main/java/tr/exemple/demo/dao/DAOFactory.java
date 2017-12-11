@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Properties;
@@ -47,14 +48,25 @@ public class DAOFactory {
 
     final static Logger log = Logger.getLogger(DAOFactory.class);
 
-    // Datasource BoneCp
+    /* paramètres de connexion à la bdd de développement pour faire des tests */
+    final static String TEST_BDD_DRIVER_CLASS = "com.mysql.jdbc.Driver";
+    final static String TEST_BDD_CONNECTION_URL = "jdbc:mysql://localhost:3307/bdd_sdzee_test";
+    final static String TEST_BDD_USERNAME = "test";
+    final static String TEST_BDD_PASSWORD = "test";
+
+    /* Datasource BoneCp */
     BoneCP connectionPool = null;
+
+    /* Paramètre de connexion classique du driver manager */
+    private String url;
+    private String username;
+    private String password;
 
     /**
      * Constructeur
      * 
      * Mise en place d'un pool de connexions sur le principe d'une DataSource, objet qui vient remplacer le
-     * DriverManager
+     * DriverManager.
      * 
      * @param connectionPool
      *            de type BoneCP
@@ -64,12 +76,22 @@ public class DAOFactory {
     }
 
     /**
+     * Constructeur sans connectionPool de BoneCP avec l'utilisation du bon vieux DriverManager.
+     */
+    DAOFactory(String url, String username, String password) {
+        this.url = url;
+        this.username = username;
+        this.password = password;
+        this.connectionPool = null;
+    }
+
+    /**
      * Méthode chargée de récupérer les informations de connexion à la base de données, charger le driver JDBC,
-     * configurer le pool de connexions via BoneCP et retourner une instance de la Factory
+     * configurer le pool de connexions via BoneCP et retourner une instance de la Factory.
      * 
      * @return une instance de la Factory
      * @throws DAOConfigurationException
-     *             Lance une exception
+     *             Lance une exception lié à une erreur de configuration du DAO
      */
     public static DAOFactory getInstance() throws DAOConfigurationException {
 
@@ -81,17 +103,12 @@ public class DAOFactory {
         /* Connexion Pool de BoneCP initialisée à null */
         BoneCP connectionPool = null;
 
+        /* Charge le fichier properties */
         InputStream fichierProperties = getInputStream(FICHIER_PROPERTIES);
         // FileInputStream fichierProperties = getFileInputStream(FICHIER_PROPERTIES);
 
-        if (fichierProperties == null) {
-            throw new DAOConfigurationException("Le fichier properties " + FICHIER_PROPERTIES + " est introuvable.");
-        } else {
-            log.info("Le fichier " + FICHIER_PROPERTIES + " a été correctement chargé.");
-
-            /* Charge la liste des propriétés du fichier properties dans la map */
-            hmap = getPropertiesKeysValues(fichierProperties);
-        }
+        /* Charge la liste des propriétés du fichier properties dans la map */
+        hmap = getPropertiesKeysValues(fichierProperties);
 
         if (hmap.get(PROPERTY_SSL).contentEquals("true")) {
             SetKeysSystem(hmap);
@@ -142,11 +159,57 @@ public class DAOFactory {
     }
 
     /**
-     * Retourne InputStream qui prouve l'existence du fichier Properties dans le ClassLoader ici src/main/resources
+     * Charge le driver JDBC MySQL et se connecte à la base de données.
+     * 
+     * @return la connexion instanciée à la base de données.
+     * @throws DAOConfigurationException
+     *             Lance une exception lorsque la classe du driver JDBC n'a pas été trouvé.
+     */
+    public static DAOFactory getInstanceDev() throws DAOConfigurationException {
+        log.trace("Tentative d'instanciation du DAO de développement.");
+        try {
+            Class.forName(TEST_BDD_DRIVER_CLASS);
+            log.info("Classe du driver JDBC chargé avec succés!");
+        } catch (ClassNotFoundException e) {
+            throw new DAOConfigurationException("La classe du driver JDBC n'a pas été trouvé.", e);
+        }
+        DAOFactory instance = new DAOFactory(TEST_BDD_CONNECTION_URL, TEST_BDD_USERNAME, TEST_BDD_PASSWORD);
+        log.info("Connexion correctement instanciée à la base de données de développement!");
+        return instance;
+    }
+
+    /**
+     * Retourne la connexion à la base de données
+     * 
+     * @return la connexion à la base de données
+     * @throws DAOConfigurationException
+     *             Lance une exception lorsque la connexion à la base de données échoue.
+     */
+    public Connection getConnectionDev() throws DAOConfigurationException {
+        Connection connexion = null;
+        log.trace("Tentative de connexion à la base de données de développement");
+        try {
+            connexion = DriverManager.getConnection(url, username, password);
+            connexion.setAutoCommit(false);
+            log.info("Connexion à la base de données de développement réussie : " + connexion);
+        } catch (SQLException e) {
+            throw new DAOConfigurationException("La connexion à la base de données a échoué.", e);
+        }
+        return connexion;
+    }
+
+    /**
+     * Retourne un input stream qui prouve l'existence ou non du fichier Properties cité en paramètre dans le
+     * ClassLoader
+     * 
+     * <p>
+     * Lance une exception si le fichier cité en paramètre est introuvable dans le ClassLoader
+     * </p>
      * 
      * @param cheminFichierProperties
      *            chemin du fichier Properties
-     * @return InputStream
+     * 
+     * @return un input stream pour lire la resource, ou <tt>null</tt> si la resource n'existe pas.
      */
     protected static InputStream getInputStream(String cheminFichierProperties) {
         /* gestion de notre fichier properties */
@@ -154,6 +217,11 @@ public class DAOFactory {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         InputStream fichierProperties = classLoader.getResourceAsStream(cheminFichierProperties);
         // InputStream fichierProperties = DAOFactory.class.getResourceAsStream(cheminFichierProperties);
+        if (fichierProperties == null) {
+            throw new DAOConfigurationException("Le fichier properties " + FICHIER_PROPERTIES + " est introuvable.");
+        } else {
+            log.info("Le fichier " + FICHIER_PROPERTIES + " a été correctement chargé.");
+        }
         return fichierProperties;
     }
 

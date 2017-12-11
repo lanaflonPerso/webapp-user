@@ -5,6 +5,8 @@ import static org.junit.Assert.assertNull;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 
 import org.apache.log4j.Logger;
@@ -31,7 +33,7 @@ public class DAOFactoryTest {
         // TODO fail("Not yet implemented");
     }
 
-    @Test
+    @Test(expected = DAOConfigurationException.class)
     public void testGetInputStream() {
 
         InputStream fichierProperties1 = DAOFactory.getInputStream("chemin bidon");
@@ -41,6 +43,23 @@ public class DAOFactoryTest {
         // InputStream fichierProperties2 = DAOFactory.getInputStream("/tr/exemple/demo/dao/dao.properties");
         // log.trace("@TEST getPropertiesFile() : " + fichierProperties2);
         // assertNotNull(fichierProperties2);
+    }
+
+    @Test
+    public void testGetInstanceDev() {
+        assertNotNull(DAOFactory.getInstanceDev());
+    }
+
+    @Test
+    public void testGetConnectionDev() {
+        DAOFactory testDao = DAOFactory.getInstanceDev();
+        Connection connexion = testDao.getConnectionDev();
+        assertNotNull(connexion);
+        try {
+            connexion.close();
+            log.info("fermeture de la connexion : " + connexion);
+        } catch (SQLException e) {
+        }
     }
 
     // @Test
