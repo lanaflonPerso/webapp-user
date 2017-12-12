@@ -2,6 +2,7 @@ package tr.exemple.demo.dao;
 
 import static tr.exemple.demo.dao.DAOUtilitaire.fermeturesSilencieuses;
 import static tr.exemple.demo.dao.DAOUtilitaire.initialisationRequetePreparee;
+import static tr.exemple.demo.dao.DAOUtilitaire.rollback;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,6 +11,12 @@ import java.sql.SQLException;
 
 import tr.exemple.demo.beans.Utilisateur;
 
+/**
+ * Implémentation des méthodes définies dans l'interface UtilisateurDao
+ * 
+ * @author Thierry Raimond
+ *
+ */
 public class UtilisateurDaoImpl implements UtilisateurDao {
 
     private DAOFactory daoFactory;
@@ -25,7 +32,13 @@ public class UtilisateurDaoImpl implements UtilisateurDao {
         this.daoFactory = daoFactory;
     }
 
-    /* Implémentation de la méthode définie dans l'interface UtilisateurDao */
+    /**
+     * Retourne le hashmap des utilisateurs
+     * 
+     * @param email
+     *            l'email de l'utilisateur à chercher dans la table 'utilisateur'
+     * 
+     */
     @Override
     public Utilisateur trouver(String email) throws DAOException {
         Connection connexion = null;
@@ -95,6 +108,7 @@ public class UtilisateurDaoImpl implements UtilisateurDao {
             preparedStatement = initialisationRequetePreparee(connexion, SQL_INSERT, true, utilisateur.getEmail(),
                     utilisateur.getMotDePasse(), utilisateur.getNom());
             int statut = preparedStatement.executeUpdate();
+            connexion.commit();
             /* Analyse du statut retourné par la requête d'insertion */
             if (statut == 0) {
                 throw new DAOException("Échec de la création de l'utilisateur, aucune ligne ajoutée dans la table.");
@@ -110,6 +124,7 @@ public class UtilisateurDaoImpl implements UtilisateurDao {
                 throw new DAOException("Échec de la création de l'utilisateur en base, aucun ID auto-généré retourné.");
             }
         } catch (SQLException e) {
+            rollback(connexion);
             throw new DAOException(e);
         } finally {
             fermeturesSilencieuses(valeursAutoGenerees, preparedStatement, connexion);
