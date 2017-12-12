@@ -20,7 +20,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * @author thier
+ * @author Thierry Raimond
  *
  */
 public class DAOUtilitaireTest {

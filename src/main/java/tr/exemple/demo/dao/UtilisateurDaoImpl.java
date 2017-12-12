@@ -33,11 +33,12 @@ public class UtilisateurDaoImpl implements UtilisateurDao {
     }
 
     /**
-     * Retourne le hashmap des utilisateurs
+     * Retourne un objet de la classe Utilisateur récupérant les informations de l'utilisateur trouvé dans la base de
+     * données via l'adresse email citée en paramètre.
      * 
      * @param email
-     *            l'email de l'utilisateur à chercher dans la table 'utilisateur'
-     * 
+     *            l'email de l'utilisateur de type String à chercher dans la table 'utilisateur'
+     * @return un objet de la classe Utilisateur
      */
     @Override
     public Utilisateur trouver(String email) throws DAOException {
@@ -66,7 +67,17 @@ public class UtilisateurDaoImpl implements UtilisateurDao {
         return utilisateur;
     }
 
-    // TODO à implémenter
+    /**
+     * Retourne un objet du bean Utilisateur récupérant les informations de l'utilisateur authentifié, c'est à dire
+     * qu'une correspondance existe entre les informations de connexion saisies (email et mot de passe cités en
+     * paramètre) avec celles en base de données.
+     * 
+     * @param email
+     *            l'email de l'utilisateur de type String
+     * @param motDePasse
+     *            le mot de passe de l'utilisateur de type String et cyrpté MD5 en base de données
+     * @return un objet du bean Utilisateur récupérant les informations de l'utilisateur authentifié ou null
+     */
     @Override
     public Utilisateur authentifier(String email, String motDePasse) throws DAOException {
         Connection connexion = null;
@@ -95,7 +106,13 @@ public class UtilisateurDaoImpl implements UtilisateurDao {
         return utilisateur;
     }
 
-    /* Implémentation de la méthode définie dans l'interface UtilisateurDao */
+    /**
+     * Ajoute un nouvel utilisateur dans la table 'utilisateur' en fonction des informations de l'objet Utilisateur cité
+     * en paramètre
+     * 
+     * @param utilisateur
+     *            bean Utilisateur contenant les informations à ajouter à la table 'utilisateur'.
+     */
     @Override
     public void creer(Utilisateur utilisateur) throws DAOException {
         Connection connexion = null;
@@ -131,9 +148,15 @@ public class UtilisateurDaoImpl implements UtilisateurDao {
         }
     }
 
-    /*
+    /**
      * Simple méthode utilitaire permettant de faire la correspondance (le mapping) entre une ligne issue de la table
      * des utilisateurs (un ResultSet) et un bean Utilisateur.
+     * 
+     * @param resultSet
+     *            Une ligne issue de la table 'utilisateur' à convertir en bean Utilisateur
+     * @return Conversion du ResultSet en objet de la classe Utilisateur
+     * @throws SQLException
+     *             lance une exception de type SQLExcception
      */
     private static Utilisateur map(ResultSet resultSet) throws SQLException {
         Utilisateur utilisateur = new Utilisateur();
