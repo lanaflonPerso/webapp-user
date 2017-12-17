@@ -9,9 +9,9 @@
                 <h4 class="modal-title"><i class="fa fa-user"></i><b>&nbsp;&nbsp;CONNEXION</b></h4>
             </div>
             <div class="modal-body">
-                <div class="resultat-ajax" id="resultatLogin" ></div>
+                <div class="resultat-ajax" id="resultatAuthentification" ></div>
 
-				<c:import url="_include/form/formConnexion.jsp" />
+				<c:import url="_include/form/formAuthentification.jsp" />
 
                 <div class="row collapse" id="impossibleContent">
                     <hr>

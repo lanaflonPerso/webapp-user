@@ -29,7 +29,7 @@
 
 <c:import url="_include/footer.jsp" />
 
-<c:import url="_include/modalLogin.jsp" />
+<c:import url="_include/modalConnexion.jsp" />
 <c:import url="_include/modalTC.jsp" />
 
 
