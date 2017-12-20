@@ -21,8 +21,9 @@ $("form#formAuthentification").submit('click', function(event){
 		'ajax', // url de la servlet qui va récupérer les données envoyées, c'est le paramètre "request" dans la servlet.
 		request, // les données du formulaire à transmettre à la servlet au format.
 		function(response){ // gestion de la réponse retournée par la servlet. paramètre "response" dans la servlet.
-			$('#resultatAuthentification').html(response).show("slow").delay(10000).hide("slow");
-		}
+			$('#resultatAuthentification').html("<p>Bienvenu " + response.email + "</p>").show("slow").delay(10000).hide("slow");
+		},
+		"json"
 	);
 	
 	/* envoi et récupération des données avec la méthode 'POST' d'Ajax */
