@@ -276,7 +276,6 @@ public class DAOFactory {
             properties.load(fichierProperties);
 
             /* Ajoute le couple (clé, valeur) de chaque ligne dans la HashMap */
-            hmap.put(PROPERTY_URL, properties.getProperty(PROPERTY_URL)); // url
             hmap.put(PROPERTY_DRIVER, properties.getProperty(PROPERTY_DRIVER)); // driver
             hmap.put(PROPERTY_NOM_UTILISATEUR, properties.getProperty(PROPERTY_NOM_UTILISATEUR)); // nomutilisateur
             hmap.put(PROPERTY_MOT_DE_PASSE, properties.getProperty(PROPERTY_MOT_DE_PASSE)); // motdepasse
@@ -288,9 +287,11 @@ public class DAOFactory {
             hmap.put(PROPERTY_MOT_DE_PASSE_SSL, properties.getProperty(PROPERTY_MOT_DE_PASSE_SSL)); // motdepassessl
             /* Si le système d'exploitation est de type Windows */
             if (Utilitaire.getOS().indexOf("win") >= 0) {
+                hmap.put(PROPERTY_URL, properties.getProperty("urlwin")); // url
                 hmap.put(PROPERTY_TRUST_STORE_PATH, properties.getProperty("truststorepathwin")); // truststorepath
                 hmap.put(PROPERTY_KEY_STORE_PATH, properties.getProperty("keystorepathwin")); // keystorepath
             } else {
+                hmap.put(PROPERTY_URL, properties.getProperty("urlunix")); // url
                 hmap.put(PROPERTY_TRUST_STORE_PATH, properties.getProperty("truststorepathunix")); // truststorepath
                 hmap.put(PROPERTY_KEY_STORE_PATH, properties.getProperty("keystorepathunix")); // keystorepath
             }
