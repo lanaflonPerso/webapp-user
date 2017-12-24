@@ -24,6 +24,7 @@
         <li>Version : ${project.version}</li>
         <li>Date du build : ${maven.build.timestamp}</li>
         <li>Java version : ${java.version}</li>
+        <li>Sytème d'exploitation : <%  %> </li>
     </ul>
 </div>
 

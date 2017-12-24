@@ -15,6 +15,8 @@ import org.apache.log4j.Logger;
 import com.jolbox.bonecp.BoneCP;
 import com.jolbox.bonecp.BoneCPConfig;
 
+import tr.exemple.utilitaires.Utilitaire;
+
 /**
  * La DAO Factory (DaoFactory.java) permet d'initialiser le DAO (Data Access Object) en chargeant notamment les drivers
  * nécessaires (ici un driver JDBC MySQL) et se connecte à la base de données. La Factory peut fournir plusieurs DAO
@@ -284,8 +286,15 @@ public class DAOFactory {
             hmap.put(PROPERTY_REQUIRE_SSL, properties.getProperty(PROPERTY_REQUIRE_SSL)); // requiressl
             hmap.put(PROPERTY_NOM_UTILISATEUR_SSL, properties.getProperty(PROPERTY_NOM_UTILISATEUR_SSL)); // nomutilisateurssl
             hmap.put(PROPERTY_MOT_DE_PASSE_SSL, properties.getProperty(PROPERTY_MOT_DE_PASSE_SSL)); // motdepassessl
-            hmap.put(PROPERTY_TRUST_STORE_PATH, properties.getProperty(PROPERTY_TRUST_STORE_PATH)); // truststorepath
-            hmap.put(PROPERTY_KEY_STORE_PATH, properties.getProperty(PROPERTY_KEY_STORE_PATH)); // keystorepath
+            /* Si le système d'exploitation est de type Windows */
+            if (Utilitaire.getOS().indexOf("win") >= 0) {
+                hmap.put(PROPERTY_TRUST_STORE_PATH, properties.getProperty("truststorepathwin")); // truststorepath
+                hmap.put(PROPERTY_KEY_STORE_PATH, properties.getProperty("keystorepathwin")); // keystorepath
+            } else {
+                hmap.put(PROPERTY_TRUST_STORE_PATH, properties.getProperty("truststorepathunix")); // truststorepath
+                hmap.put(PROPERTY_KEY_STORE_PATH, properties.getProperty("keystorepathunix")); // keystorepath
+            }
+            log.info("Le système d'exploitation est " + Utilitaire.getOS());
             log.info("Tous les champs ont été récupérés.");
             fichierProperties.close();
             log.trace("Fermeture de l'input stream " + fichierProperties);
