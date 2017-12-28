@@ -277,8 +277,6 @@ public class DAOFactory {
 
             /* Ajoute le couple (clé, valeur) de chaque ligne dans la HashMap */
             hmap.put(PROPERTY_DRIVER, properties.getProperty(PROPERTY_DRIVER)); // driver
-            hmap.put(PROPERTY_NOM_UTILISATEUR, properties.getProperty(PROPERTY_NOM_UTILISATEUR)); // nomutilisateur
-            hmap.put(PROPERTY_MOT_DE_PASSE, properties.getProperty(PROPERTY_MOT_DE_PASSE)); // motdepasse
             hmap.put(PROPERTY_SSL, properties.getProperty(PROPERTY_SSL)); // ssl
             hmap.put(PROPERTY_VERIFY_SERVER_CERTIFICATE, properties.getProperty(PROPERTY_VERIFY_SERVER_CERTIFICATE)); // verifyservercertificate
             hmap.put(PROPERTY_USE_SSL, properties.getProperty(PROPERTY_USE_SSL)); // usessl
@@ -290,10 +288,14 @@ public class DAOFactory {
                 hmap.put(PROPERTY_URL, properties.getProperty("urlwin")); // url
                 hmap.put(PROPERTY_TRUST_STORE_PATH, properties.getProperty("truststorepathwin")); // truststorepath
                 hmap.put(PROPERTY_KEY_STORE_PATH, properties.getProperty("keystorepathwin")); // keystorepath
+                hmap.put(PROPERTY_NOM_UTILISATEUR, properties.getProperty("nomutilisateurwin")); // nomutilisateur
+                hmap.put(PROPERTY_MOT_DE_PASSE, properties.getProperty("motdepassewin")); // motdepasse
             } else {
                 hmap.put(PROPERTY_URL, properties.getProperty("urlunix")); // url
                 hmap.put(PROPERTY_TRUST_STORE_PATH, properties.getProperty("truststorepathunix")); // truststorepath
                 hmap.put(PROPERTY_KEY_STORE_PATH, properties.getProperty("keystorepathunix")); // keystorepath
+                hmap.put(PROPERTY_NOM_UTILISATEUR, properties.getProperty("nomutilisateurunix")); // nomutilisateur
+                hmap.put(PROPERTY_MOT_DE_PASSE, properties.getProperty("motdepasseunix")); // motdepasse
             }
             log.info("Le système d'exploitation est " + Utilitaire.getOS());
             log.info("Tous les champs ont été récupérés.");
