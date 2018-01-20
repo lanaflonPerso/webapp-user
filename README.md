@@ -6,3 +6,5 @@ https://openclassrooms.com/courses/creez-votre-application-web-avec-java-ee/form
 
 Construit avec Maven
 Intégration continue avec Jenkins
+
+20/01/2018 : Migration du projet vers https://gitlab.com en mode "privé"
